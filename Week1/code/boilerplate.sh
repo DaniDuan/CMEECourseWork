@@ -5,6 +5,6 @@
 # Arguements: none
 # Date: Oct.2020
 
-echo -e "\nThis is a shell script \n"
+echo -e "\nThis is a shell script\n"
 
 #exit
