@@ -1,6 +1,14 @@
-#1 wc -l 407228326.fasta 407228412.fasta E.coli.fasta
-#2 tail -n +2 ../data/E.coli.fasta
-#3 wc -m ../data/E.coli.fasta
-#4 tail -n +2 ../data/E.coli.fasta | grep -o ATGC | wc -l
-#5 echo $[((`tail -n +2 ../data/E.coli.fasta | grep -o A | wc -l` + `tail -n +2 ../data/E.coli.fasta | grep -o T | wc -l`))]/$[((`tail -n +2 ../data/E.coli.fasta | grep -o G | wc -l` + `tail -n +2 ../data/E.coli.fasta | grep -o C | wc -l`))] | bc -l
+#1 Counting lines in each file
+wc -l 407228326.fasta 407228412.fasta E.coli.fasta
+#2 Printing start from the second line
+tail -n +2 ../data/E.coli.fasta
+#3 Count the sequence length of the genome
+tail -n +2 ../data/E.coli.fasta | tr -d "\n\r" | wc -c
+#4 Count the matches of "ATCG"
+tail -n +2 ../data/E.coli.fasta | tr -d "\n\r" | grep -o ATGC | wc -l
+#5 Compute the AT/GC ratio
+echo $[((`tail -n +2 ../data/E.coli.fasta | grep -o A | wc -l` + `tail -n +2 ../data/E.coli.fasta | grep -o T | wc -l`))]/$[((`tail -n +2 ../data/E.coli.fasta | grep -o G | wc -l` + `tail -n +2 ../data/E.coli.fasta | grep -o C | wc -l`))] | bc -l
 
+
+
+echo "scale=3;" $(grep -o "A\|T" ../Data/E.coli.fasta | wc -l) / $(grep -o "G\|C" ../Data/E.coli.fasta | wc -l) | bc

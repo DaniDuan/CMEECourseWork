@@ -13,16 +13,18 @@ if [ -z "$1" ]
 then
 	echo "Please input a txt file"
 
+else 
+
 elif [ $1 == *.csv ]
+
 then
-        	echo "Already a csv file"
+       	echo "Already a csv file"
 
 elif [ -s "$1" ]
+
 then 
+    		cho "File is empty"
+
 	cat $1 | tr -s "\t" "," >> $1.csv
-        echo "done!"
-
-else 
-    	echo "File is empty"
-
+	echo "done!" && exit
 fi
