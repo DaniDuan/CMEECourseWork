@@ -1,0 +1,44 @@
+#!/bin/bash
+# Author: Danica dd1820@imperial.ac.uk
+# Script: tabtocsv.sh
+# Description: substitute the tabs in the file with commas
+#
+# Save the output into a .csv file
+# Arguements: 1 -> tab delimited file
+# Date: Oct.2020
+
+n=0 
+while [ $n = 0 ]
+do
+#Check whether a file is inputted
+	if [ -z "$FileName" ] #If not inputted
+	then
+		echo "please enter the name of the file for transfer"
+		read $FileName
+	else
+#Check whether the file exist
+		if [ -f "$FileName" ] # if the file exist
+		then
+#Check whether its already a csv file			
+			if [ $FileName == *.csv ] #If the file is already a csv file
+			then
+        			echo "Already a csv file"
+				n=$n
+#Check whether the file is empty
+			else
+				if [ -s "$FileName" ] #If the file is not empty
+				then 
+					echo "Creating a comma delimited version of $FileName ..."
+					cat $FileName | tr -s "\t" "," >> $FileName.csv
+       					echo "done!"
+					n=$((n+1))
+
+				else #If the file is empty
+  					echo "File is empty"
+					n=$n
+				fi
+			fi
+
+		fi
+	fi
+done
