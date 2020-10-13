@@ -9,5 +9,5 @@
 for f in *.tif;
 do 
 	echo "converting $f";
-	convert "$f" "$(basename "$f" .tif).png";
+	convert "$f" "$(basename "$f" .tif).png" ;
 done

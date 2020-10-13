@@ -10,5 +10,5 @@ tail -n +2 ../data/E.coli.fasta | tr -d "\n\r" | grep -o ATGC | wc -l
 echo $[((`tail -n +2 ../data/E.coli.fasta | grep -o A | wc -l` + `tail -n +2 ../data/E.coli.fasta | grep -o T | wc -l`))]/$[((`tail -n +2 ../data/E.coli.fasta | grep -o G | wc -l` + `tail -n +2 ../data/E.coli.fasta | grep -o C | wc -l`))] | bc -l
 
 
-
+#5 Another method?
 echo "scale=3;" $(grep -o "A\|T" ../Data/E.coli.fasta | wc -l) / $(grep -o "G\|C" ../Data/E.coli.fasta | wc -l) | bc
