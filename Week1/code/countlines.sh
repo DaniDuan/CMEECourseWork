@@ -27,3 +27,4 @@ else #If user entered the file name with bash command
 	Numlines=`wc -l < $1` #Set a variable for lines counting in a file
 	echo "The file $1 has $Numlines lines"
 fi
+exit

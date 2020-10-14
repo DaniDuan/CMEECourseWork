@@ -6,3 +6,4 @@ echo "$msg1 $msg2"
 echo "Hello $USER"
 echo
 
+exit

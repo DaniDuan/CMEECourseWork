@@ -23,7 +23,7 @@ then
 			n=$n #return to enter a file/directory
 		fi
 	done
-#Check if the user entered a directory, change all files in the directory (only works in the current directory now)
+#Check if the user entered a directory, change all files in the directory
 	if [ -d "$Name" ] #If a directory is entered
 	then
     	for i in $Name/*.csv;
@@ -54,7 +54,7 @@ then
 		echo "File does not exist"
 	fi
 else #If user entered a name with bash command
-#Check if the user entered a directory, change all files in the directory(only works in the current directory for now)
+#Check if the user entered a directory, change all files in the directory
 	if [ -d "$1" ] #If a directory is entered
 	then
     	for i in $1/*.csv;
@@ -84,3 +84,4 @@ else #If user entered a name with bash command
         echo "File does not exist"
     fi
 fi
+exit

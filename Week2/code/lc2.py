@@ -16,9 +16,15 @@ rainfall = (('JAN',111.4),
 
 # (1) Use a list comprehension to create a list of month,rainfall tuples where
 # the amount of rain was greater than 100 mm.
+
+my_list = [(x, y) for x, y in rainfall if y > 100]
+print(my_list)
  
 # (2) Use a list comprehension to create a list of just month names where the
 # amount of rain was less than 50 mm. 
+
+months = [x for x, y in rainfall if y < 50]
+print(months)
 
 # (3) Now do (1) and (2) using conventional loops (you can choose to do 
 # this before 1 and 2 !). 
@@ -30,3 +36,14 @@ rainfall = (('JAN',111.4),
 # [('JAN', 111.4), ('FEB', 126.1), ('AUG', 140.2), ('NOV', 128.4), ('DEC', 142.2)]
 # ... etc.
 
+my_list = []
+months = []
+for x, y in rainfall:
+    if y > 100:
+        my_list.append((x, y))
+print(my_list)
+
+for x, y in rainfall:
+    if y < 50:
+        months.append(x)
+print(months)
