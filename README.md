@@ -1,35 +1,40 @@
-# Coursework for CMEE: Week 1
+# My CMEE Coursework Repository
 
 ## Description
 
-This Week1 directory contains shell scripts for coursework in **shell scripting** and scientific documents with **LaTex** sections of the Computing Chapter of [The Multilingual Quantitative Biologist](https://mhasoba.github.io/TheMulQuaBio/intro.html) book.
+This repository contains **codes**, **data files** and **generated results** of CMEE Coursework, including basic computing and data analysis and statistics based on [The Multilingual Quantitative Biologist](https://mhasoba.github.io/TheMulQuaBio/intro.html#) book; organize on weekly basis and update on daily basis.
 
 ## Languages
 
-Bash
+- [x] Bash;
+- [ ] Python;
+- [ ] R
 
 ## Dependencies
 
-For some scripts in this directory [imagemagick](https://imagemagick.org/index.php) installation is required.
+For some scripts [imagemagick](https://imagemagick.org/index.php) installation is required.
 
 ```bash
 sudo apt install imagemagick
 ```
-[LaTeX](https://www.latex-project.org/) installation is required:
+[LaTeX](https://www.latex-project.org/) installation is required (which is a large installation):
 ```bash
 sudo apt install texlive-full texlive-fonts-recommended texlive-pictures texlive-latex-extra imagemagick
 ```
-
-
 ## Installation
 
-To use scripts in this directory clone the repository and run.
+To use scripts in this repository, clone and run.
 
 ```bash
 git clone https://github.com/DaniDuan/CMEECourseWork.git
 ```
 
 ## Project structure and Usage 
+
+### Chapter 1: Computing
+- [x] **Week1**
+
+Shell scripts for courseworks in **shell scripting** and scientific documents with **LaTex** :
 
 - **CompileLaTeX&#46;sh:** A bash script to compile latex with bibtex.
 
@@ -48,6 +53,23 @@ git clone https://github.com/DaniDuan/CMEECourseWork.git
 - **variables&#46;sh**: Examples for usage of variables. 
 
 - **UnixPrac1.txt:** UNIX shell commands with certain functions for reading .fasta files (in the data directory). 
+
+<br/>
+
+- [ ] Week2
+
+Biological computing in **Python** :
+
+- [ ] Week3
+
+Biological Computing in **R**: 
+
+<br/>
+
+### Chapter 2: Data analysis and statistics
+
+<br/>
+
 
 ## Author name and contact
 

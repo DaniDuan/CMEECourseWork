@@ -38,7 +38,7 @@ def is_prime(x=70):
     """Find whether an integer is prime."""
     for i in range(2,x):
         if x % i == 0:
-            print("%d is not a prime: %d is a advisor" % (x, i))
+            print("%d is not a prime: %d is a divisor" % (x, i))
             return False
         print("%d is a prime!" % x)
         return True
