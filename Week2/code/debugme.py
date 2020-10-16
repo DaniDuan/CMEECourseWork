@@ -1,7 +1,7 @@
 def makeabug(x):
-    y = x**4
-    z = 0.
-    y = y/z
-    return y
+    y = x
+    for i in range(x):
+        y = y - 1
+        z = x/y
 
-makeabug(25)
+makeabug(20)

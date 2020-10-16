@@ -10,7 +10,7 @@ taxa = [ ('Myotis lucifugus','Chiroptera'),
          ('Canis lupus', 'Carnivora'),
         ]
 
-#First method:
+#First method: (overwriting the original dictionary, need to be rewritten)
 taxa_dic = {}
 for x, y in taxa:
         taxa_dic[y] = {x}

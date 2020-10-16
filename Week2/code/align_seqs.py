@@ -21,6 +21,7 @@ def calculate_score(s1, s2, l1, l2, startpoint):
     matched = "" # to hold string displaying alignements
     score = 0
     for i in range(l2):
+        import ipdb; ipdb.set_trace()
         if (i + startpoint) < l1:
             if s1[i + startpoint] == s2[i]: # if the bases match
                 matched = matched + "*"
