@@ -56,7 +56,7 @@ def foo_6(x = 5):
 def main(argv):
     print(foo_1(2))
     print(foo_2(3, 5))
-    print(foo_3(2, 5, 7))
+    print(foo_3(2, 5, 1))
     print(foo_4(5))
 
     foo5_in = 5

@@ -19,8 +19,8 @@ birds = ( ('Passerculus sandwichensis','Savannah sparrow',18.7),
 
 
 
-for row in birds:
-    print("Latin name: ", row[0],
-    "\n Common name: ", row[1],
-    "\n mass: ", row[2], "\n")
+for i in birds:
+    print("Latin name: ", i[0],
+    "\n Common name: ", i[1],
+    "\n mass: ", i[2], "\n")
 

@@ -1,6 +1,27 @@
+#!/usr/bin/env python3
+
+"""aligns two DNA sequences, returns the best match,
+ and count the “score” as total of number of bases matched."""
+
+__appname__ = 'align_seqs.py'
+__author__ = 'Danica (d.duan20@imperial.ac.uk)'
+__version__= '0.0.1'
+__license__ = ""
+
+
+## Imports ##
+import csv
+import sys
+
+
+## Constants ##
+
 # Two example sequences to match
-seq2 = "ATCGCCGGATTACGGG"
-seq1 = "CAATTCGGAT"
+f = open('../data/sample_sequence.csv','r')
+csvread = csv.reader(f)
+for row in csvread:
+    seq1 = row[0]
+    seq2 = row[1]
 
 # Assign the longer sequence s1, and the shorter to s2
 # l1 is length of the longest, l2 that of the shortest
@@ -15,13 +36,15 @@ else:
     s2 = seq1
     l1, l2 = l2, l1 # swap the two lengths
 
+
+## Functions ##
+
 # A function that computes a score by returning the number of matches starting
 # from arbitrary startpoint (chosen by user)
 def calculate_score(s1, s2, l1, l2, startpoint):
     matched = "" # to hold string displaying alignements
     score = 0
     for i in range(l2):
-        import ipdb; ipdb.set_trace()
         if (i + startpoint) < l1:
             if s1[i + startpoint] == s2[i]: # if the bases match
                 matched = matched + "*"
@@ -55,3 +78,13 @@ for i in range(l1): # Note that you just take the last alignment with the highes
 print(my_best_align)
 print(s1)
 print("Best score:", my_best_score)
+
+def main(argv): 
+    g = open('../results/output_sample_sequence.txt','w') 
+    g.write('My best alignment is ' + str(my_best_align) + '\n')
+    g.write('My best score is ' + str(my_best_score) + '\n')
+    return 0
+
+if __name__ == "__main__": 
+    status = main(sys.argv)
+    sys.exit(status)
