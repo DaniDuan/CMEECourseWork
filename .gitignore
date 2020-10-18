@@ -1,1 +1,5 @@
 .vscode*
+python_2*
+sys
+__pycache__*
+csv
