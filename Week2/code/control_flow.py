@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
-"""Description of this program or application.
-You can use several lines """
+"""Some functions exemplifying the use of control statements"""
+#docstrings are considered part of the running code (normal comments are
+#stripped). Hence, you can access your docstrings at run time.
 
 __appname__ = 'control_flow.py'
 __author__ = 'Danica (d.duan20@imperial.ac.uk)'

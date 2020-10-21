@@ -1,7 +1,14 @@
 def makeabug(x):
     y = x
     for i in range(x):
-        y = y - 1
-        z = x/y
-
+        try:
+            y = y - 1
+            z = x/y
+        except ZeroDivisionError:
+            print(f"The result of dividing a number by zero is undefined")
+        except:
+            print(f"This doesn't work; x = {x}, y = {y}")
+        else:
+            print(f"ok; x={x}, y={y}, z={z};")
+    return z
 makeabug(20)
