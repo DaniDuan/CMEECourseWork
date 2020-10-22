@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+"""Creating lists from *rainfall* data upon requirements using comprehension and loops."""
+
 # Average UK Rainfall (mm) for 1910 by month
 # http://www.metoffice.gov.uk/climate/uk/datasets
 rainfall = (('JAN',111.4),

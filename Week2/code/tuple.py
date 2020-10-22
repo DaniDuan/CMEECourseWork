@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+"""Output block by species on tuple Birds."""
+
 birds = ( ('Passerculus sandwichensis','Savannah sparrow',18.7),
           ('Delichon urbica','House martin',19),
           ('Junco phaeonotus','Yellow-eyed junco',19.5),

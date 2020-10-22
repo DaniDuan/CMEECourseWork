@@ -13,6 +13,7 @@ import sys # module to interface our program with the operating system
 import doctest
 
 ## constants ##
+
 def even_or_odd(x=0):
     """Find whether a number x is even or odd.
 
@@ -38,16 +39,18 @@ def even_or_odd(x=0):
 
 
 ## functions ##
-#def main(argv):
-#    print even_or_odd(22)
-#   print even_or_odd(33)
-#    return 0
+def main(argv):
+    """Main entry point of the program"""
+
+    print(even_or_odd(22))
+    print(even_or_odd(33))
+    return 0
 
 
 
-#if __name__ == "__main__": 
-#    """Makes sure the "main" function is called from the command line"""
-#    status = main(sys.argv)
-#    sys.exit(status)
+if __name__ == "__main__": 
+   """Makes sure the "main" function is called from the command line"""
+   status = main(sys.argv)
+   sys.exit(status)
 
 doctest.testmod() # To run with embedded tests

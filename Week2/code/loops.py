@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+"""excercise on python loops"""
+
 for i in range(5):
     print(i)
 

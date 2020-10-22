@@ -1,7 +1,12 @@
+#!/usr/bin/env python3
+"""blocks of code illustrating variable scope."""
+
+
 _a_global = 10
 if _a_global >= 5:
     _b_global = _a_global
 
+"""creating a_function"""
 def a_function():
     _a_global = 5
 
@@ -23,6 +28,7 @@ print("Outside the function, the value of _b_global is", _b_global)
 
 
 _a_global = 10
+"""creating a_function"""
 def a_function():
     _a_local = 4
 
@@ -40,6 +46,8 @@ _a_global = 10
 
 print("Outside the function, the value of _a_global is", _a_global)
 
+"""creating a_function"""
+
 def a_function():
     global _a_global
     _a_global = 5
@@ -54,13 +62,15 @@ a_function()
 
 print("Outside the function, the value of _a_global now is", _a_global)
 
+"""creating a_function"""
 
 def a_function():
     _a_global = 10
 
-    def _a_function2():
-        global _a_global
-        _a_global = 20
+"""subfunction for defining global"""
+def _a_function2():
+    global _a_global
+    _a_global = 20
 
     print("Before calling a_function, value of _a_global is", _a_global)
 
@@ -76,6 +86,8 @@ print("The value of _a_global in main workspace is", _a_global)
 
 
 _a_global = 10
+
+"""creating a_function"""
 
 def a_function():
 

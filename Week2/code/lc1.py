@@ -1,3 +1,7 @@
+#!/usr/bin/env python3
+"""Creating lists from *birds* data upon requirements using comprehension and loops."""
+
+
 birds = ( ('Passerculus sandwichensis','Savannah sparrow',18.7),
           ('Delichon urbica','House martin',19),
           ('Junco phaeonotus','Yellow-eyed junco',19.5),
@@ -10,9 +14,9 @@ birds = ( ('Passerculus sandwichensis','Savannah sparrow',18.7),
 # each species in birds, respectively. 
 
 #Method 1
-Latin_names = [i for i[0] in birds]
-Common_names = [i for i[1] in birds]
-Mean_body_masses = [i for i[2] in birds]
+Latin_names = [ i[0] for i in birds ]
+Common_names = [i[1] for i in birds]
+Mean_body_masses = [i[2] for i in birds]
 
 #Method 2
 #Latin_names = [x for x, y, z in birds]

@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+""" Populating taxa_dic dictionary derived from taxa, maping order names to sets of taxa."""
+
 taxa = [ ('Myotis lucifugus','Chiroptera'),
          ('Gerbillus henleyi','Rodentia',),
          ('Peromyscus crinitus', 'Rodentia'),

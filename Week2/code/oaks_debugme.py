@@ -38,12 +38,14 @@ def is_an_oak(name):
     # Define function to be tested
     # return name.lower().startswith('quercus')
     name = name.split(" ")
-    if name[0].lower() == 'quercus':
+    if name[0] == 'Quercus':
         return True
     else:
         return False
 
 def main(argv): 
+    """Main entry point of the program"""
+
     f = open('../data/TestOaksData.csv','r')
     g = open('../data/JustOaksData.csv','w')
     taxa = csv.reader(f)
@@ -61,8 +63,12 @@ def main(argv):
                 print('FOUND AN OAK!\n')
                 csvwrite.writerow([row[0], row[1]])    
     return 0
+    f.close()
+    g.close()
 
 if (__name__ == "__main__"):
+    """Makes sure the "main" function is called from the command line"""
+
     status = main(sys.argv)
 
 doctest.testmod() # To run with embedded tests

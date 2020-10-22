@@ -16,31 +16,35 @@ import sys
 
 ## Constants ##
 
-# Two example sequences to match
-f = open('../data/sample_sequence.csv','r')
-csvread = csv.reader(f)
-for row in csvread:
-    seq1 = row[0]
-    seq2 = row[1]
-
-# Assign the longer sequence s1, and the shorter to s2
-# l1 is length of the longest, l2 that of the shortest
-
-l1 = len(seq1)
-l2 = len(seq2)
-if l1 >= l2:
-    s1 = seq1
-    s2 = seq2
-else:
-    s1 = seq2
-    s2 = seq1
-    l1, l2 = l2, l1 # swap the two lengths
-
-
 ## Functions ##
+"""Two example sequences to match"""
+def file_import():
+    f = open('../data/sample_sequence.csv','r')
+    csvread = csv.reader(f)
+    for row in csvread:
+        seq1 = row[0]
+        seq2 = row[1]
+    f.close()
+    return seq1, seq2
 
-# A function that computes a score by returning the number of matches starting
-# from arbitrary startpoint (chosen by user)
+"""Assign the longer sequence s1, and the shorter to s2
+l1 is length of the longest, l2 that of the shortest"""
+def swap_lengths(seq1, seq2): 
+    l1 = len(seq1)
+    l2 = len(seq2)
+    if l1 >= l2:
+        s1 = seq1
+        s2 = seq2
+    else:
+        s1 = seq2
+        s2 = seq1
+        l1, l2 = l2, l1 # swap the two lengths
+    return s1, s2, l1, l2
+
+
+
+"""A function that computes a score by returning the number of matches starting
+from arbitrary startpoint (chosen by user)"""
 def calculate_score(s1, s2, l1, l2, startpoint):
     matched = "" # to hold string displaying alignements
     score = 0
@@ -66,25 +70,39 @@ def calculate_score(s1, s2, l1, l2, startpoint):
 # calculate_score(s1, s2, l1, l2, 1)
 # calculate_score(s1, s2, l1, l2, 5)
 
-# now try to find the best match (highest score) for the two sequences
-my_best_align = None
-my_best_score = -1
+"""now try to find the best match (highest score) for the two sequences"""
+def best_match(s1, s2, l1, l2):
+    my_best_align = None
+    my_best_score = -1
 
-for i in range(l1): # Note that you just take the last alignment with the highest score
-    z = calculate_score(s1, s2, l1, l2, i)
-    if z > my_best_score:
-        my_best_align = "." * i + s2 # think about what this is doing!
-        my_best_score = z 
-print(my_best_align)
-print(s1)
-print("Best score:", my_best_score)
+    for i in range(l1): # Note that you just take the last alignment with the highest score
+        z = calculate_score(s1, s2, l1, l2, i)
+        if z > my_best_score:
+            my_best_align = "." * i + s2 # think about what this is doing!
+            my_best_score = z 
+    print(my_best_align)
+    print(s1)
+    print("Best score:", my_best_score)
 
-def main(argv): 
+    return my_best_align, my_best_score
+
+"""output file"""
+def file_output(my_best_align, my_best_score):
     g = open('../results/output_sample_sequence.txt','w') 
     g.write('My best alignment is ' + str(my_best_align) + '\n')
     g.write('My best score is ' + str(my_best_score) + '\n')
+    g.close()
+    return 0
+
+def main(argv): 
+    """Main entry point of the program"""
+    seq1, seq2 = file_import()
+    s1, s2, l1, l2 = swap_lengths(seq1, seq2)
+    my_best_align, my_best_score = best_match(s1, s2, l1, l2)
+    file_output(my_best_align, my_best_score)
     return 0
 
 if __name__ == "__main__": 
+    """Makes sure the "main" function is called from the command line"""
     status = main(sys.argv)
     sys.exit(status)

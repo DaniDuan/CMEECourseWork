@@ -1,3 +1,7 @@
+#!/usr/bin/env python3
+
+""" Excercise file on python loops and conditions"""
+
 for j in range(12):
     if j % 3 == 0:
         print('Hello')

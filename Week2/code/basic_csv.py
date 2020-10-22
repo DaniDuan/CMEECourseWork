@@ -1,3 +1,7 @@
+#!/usr/bin/env python3
+
+"""import and write file for species and body mass"""
+
 import csv
 # Read a file containing:
 # 'Species','Infraorder','Family','Distribution','Body mass male (Kg)'
@@ -13,7 +17,7 @@ f.close()
 
 # write a file containing only species name and Body mass
 f = open('../data/testcsv.csv', 'r')
-g = open('../data/readcsv.csv', 'w')
+g = open('../data/bodymass.csv', 'w')
 
 csvread = csv.reader(f)
 csvwrite = csv.writer(g)
