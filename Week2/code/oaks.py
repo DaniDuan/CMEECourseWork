@@ -10,6 +10,7 @@ taxa = ['Quercus robur',
          'Quercus petraea',
        ]
 
+"""creating function for collecting oak name"""
 def is_an_oak(name):
     return name.startswith('Quercus ')
 
