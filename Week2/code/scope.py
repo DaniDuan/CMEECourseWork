@@ -91,6 +91,8 @@ _a_global = 10
 
 def a_function():
 
+    """Creating a subfunction"""
+
     def _a_function2():
         global a_global
         _a_global = 20
