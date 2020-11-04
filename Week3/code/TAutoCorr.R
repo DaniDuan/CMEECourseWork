@@ -21,3 +21,6 @@ for(i in 1:10000){
 cor_random
 
 hist(cor_random)
+
+fraction = length(cor_random[cor_random>cor])/10000
+fraction
