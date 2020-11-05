@@ -1,4 +1,3 @@
-install.packages("ggplot2")
 require(ggplot2)
 x = seq(0,100, by=0.1)
 y =-4. + 0.25*x + rnorm(length(x),mean=0.,sd=2.5)

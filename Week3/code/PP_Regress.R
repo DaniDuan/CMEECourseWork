@@ -17,7 +17,7 @@ for(i in 1:length(unique(MyDF$Predator.lifestage))){
   life = subset(MyDF, Predator.lifestage == unique(Predator.lifestage)[i])
   for(n in 1: length(unique(life$Type.of.feeding.interaction))){
     feed = subset(life, Type.of.feeding.interaction == unique(Type.of.feeding.interaction)[n])
-    if(nrow(feed)>2){
+#    if(nrow(feed)> 2){
       Summ = summary(lm(log(Predator.mass)~log(Prey.mass), data = feed))
       dataframe = data.frame(
         unique(MyDF$Type.of.feeding.interaction)[n],
@@ -25,9 +25,11 @@ for(i in 1:length(unique(MyDF$Predator.lifestage))){
         r2 = Summ$r.squared,
         inter = Summ$coefficients[1],
         slope = Summ$coefficients[2],
-        pvalue = Summ$coefficients[2,4],
+        pvalue = Summ$coefficients[8],
         fvalue = as.numeric(Summ$fstatistic[1]))
       output = rbind(output, dataframe)
-    }
+#    }
   }
 }
+names(output) = c("Type of Feeding Interaction", "Predator Lifestage", "R2", "intercept", "slope", "p-value", "F-value")
+write.csv(output, "../results/PP_Regress_Results.csv", row.names = F)

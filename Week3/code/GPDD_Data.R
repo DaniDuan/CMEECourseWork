@@ -12,3 +12,6 @@ world = p + borders("world", colour = "grey 55", fill = "grey 99") +
   geom_point(data = gpdd, aes(x = long, y = lat), color = "black", shape = I(3), alpha = I(0.8))
 
 world
+
+#The locations were not evenly distributed. More locations were located at seaside, 
+#therefore less terrestrial and freshwater habitats are considered. 

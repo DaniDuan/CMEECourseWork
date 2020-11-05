@@ -1,7 +1,6 @@
 ################################################################
 ################## Wrangling the Pound Hill Dataset ############
 ################################################################
-detach("package:reshape2", unload =T) # unload the reshape2 package
 ############# Load the dataset ###############
 # header = false because the raw data don't have real headers
 MyData <- as.matrix(read.csv("../data/PoundHillData.csv", header = FALSE))
@@ -44,10 +43,3 @@ dim(MyWrangledData2)
 
 
 ############# Exploring the data (extend the script below)  ###############
-
-require(tidyverse)
-tidyverse_packages(include_self = T)
-tibble::as_tibble(MyWrangledData)
-dplyr::glimpse(MyWrangledData)
-dplyr::filter(MyWrangledData, Count>100)
-dplyr::slice(MyWrangledData,10:15)

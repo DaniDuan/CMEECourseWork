@@ -8,6 +8,7 @@ plot(ats,type="p")
 temp1 = ats$Temp[2:length(ats$Temp)]
 temp2 = ats$Temp[1:length(ats$Temp)-1]
 cor = cor(temp1, temp2)
+cor.test(temp1,temp2)
 
 cor_random = c()
 for(i in 1:10000){
@@ -18,9 +19,12 @@ for(i in 1:10000){
   cor_random = c(cor_random,x)
 }
 
-cor_random
-
-hist(cor_random)
+pdf("Autocorrelation_plot.pdf", 8,5)
+plot(density(cor_random), xlab = "Correlation Coefficients", main = "")
+abline(v=cor, lty=2)
+text(x = cor, y = 3.5, labels = "correlation between\nsuccessive years\nr = 0.326")
+graphics.off()
 
 fraction = length(cor_random[cor_random>cor])/10000
 fraction
+

@@ -1,4 +1,3 @@
-install.packages("ggplot2")
 require(ggplot2)
 
 build_ellipse = function(hradius,vradius){
