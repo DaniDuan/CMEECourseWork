@@ -18,7 +18,6 @@ for(i in unique(MyDF$Predator.lifestage)){
   for(n in unique(life$Type.of.feeding.interaction)){
     feed = subset(life, Type.of.feeding.interaction == n)
     print(paste(feed$Predator.lifestage[1], feed$Type.of.feeding.interaction[1]))
-#    if(nrow(feed)> 2){
       Summ = summary(lm(log(Predator.mass)~log(Prey.mass), data = feed))
       if(is.null(Summ$fstatistic[1])){
         fvalue = "NA"
@@ -32,7 +31,6 @@ for(i in unique(MyDF$Predator.lifestage)){
         pvalue = Summ$coefficients[8],
         fvalue = fvalue)
       output = rbind(output, dataframe)
-#    }
   }
 }
 names(output) = c("Type of Feeding Interaction", "Predator Lifestage", "R2", "intercept", "slope", "p-value", "F-value")
