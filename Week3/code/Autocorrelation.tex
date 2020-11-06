@@ -31,37 +31,44 @@
 %   Problem 1   %
 %%%%%%%%%%%%%%%%%
 \section*{Question}
-Are temperatures of one year significantly correlated with the next year?
+Are temperatures of one year significantly correlated with the next year in Key West, Florida?
 
 \section*{Method}
-First, Pearson correlation coefficient\cite{freedman2007statistics} was selected for testing linear relationships between variables, in this case the linear relationships between temperatures of previous and successive years. 
+First, Pearson correlation coefficient\cite{freedman2007statistics} is selected for testing linear relationships between variables, in this case the linear relationships between temperatures of previous and successive years. 
 \begin{align}
     \label{Pearson correlation} % Equation label; can be used for referencing
     r = 
     \frac{ \sum_{i=1}^{n}(x_i-\bar{x})(y_i-\bar{y}) }{%
         \sqrt{\sum_{i=1}^{n}(x_i-\bar{x})^2}\sqrt{\sum_{i=1}^{n}(y_i-\bar{y})^2}}
 \end{align}
-Then, the normal distribution of correlation coefficients was plotted with randomly permuted time series.
+Then, the normal distribution of correlation coefficients is plotted with temperatures in randomly permuted time series.
 \\
-\\At last, an approximate p-value was calculated by taking the percentage of randomly permuted coefficients which are greater than the correlation coefficient between years (calculated in the first step). 
+\\Finally, since measurements of climatic variables in successive time-points in a time series are not independent, an approximate p-value is calculated instead of the standard p-value from correlation coefficient calculation, by taking the percentage of correlation coefficients in randomly permuted temperatures which are greater than the originally calculated correlation coefficient. 
 
 \section*{Result Interpretation}
 The null hypothesis can be set as: Temperatures of the successive years have no correlation with the previous years. 
 \\
-\\The Pearson correlation coefficient of temperatures calculated between years was 0.326, which possibly indicates a moderately positive correlation.
+\\The originally calculated Pearson correlation coefficient of temperatures between years is 0.326, which indicates a moderately positive correlation(Figure~\ref{fig:temperature}).
 \\
-\\As shown in Figure~\ref{fig:Autocorrelation}, the coefficient of temperatures between successive years appeared at the far right end of the distribution. And after permuting the time series for multiple times, all p-values obtained were lower than 0.001, which indicates a significantly low likelihood of randomly obtaining such correlation (r = 0.326), therefore suggesting the correlation of temperature between years was highly significant. This result can be regarded as a strong evidence for rejecting the null hypothesis.
+\\As shown in Figure~\ref{fig:Autocorrelation}, the correlation coefficient of temperatures between successive years appears at the far right end of the distribution. And after conducting the permutation analysis for multiple times, all p-values obtained are lower than 0.001, which indicates a significantly low likelihood of randomly obtaining such correlation (r = 0.326), therefore suggesting the correlation of temperature between years is highly significant. This result can be regarded as a strong evidence to support that temperatures for successive years are significantly correlated with the previous years in the given data set.
 \\
-\\Therefore in general, this result indicates the temperatures of successive years are highly significantly correlated with previous years, and the correlation is moderately positive. 
+\\The correlation can be extended into further years if there is no major additional impacts from environmental changes in the following years at Key West, Florida. 
 \begin{figure}[h!]
     \centering
-    \includegraphics[scale=0.85]{Autocorrelation_plot.pdf}
+    \includegraphics[scale=0.65]{../results/temperature.pdf}
+    \caption{Temperature correlation between successive and previous years.}
+    \label{fig:temperature}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=0.65]{../results/Autocorrelation_plot.pdf}
     \caption{Density plot for correlation coefficients after randomly permuting the time series.}
     \label{fig:Autocorrelation}
 \end{figure}
 
 
 \bibliographystyle{plain}
-\bibliography{pearson}
+\bibliography{Autocorrelation}
 
 \end{document}

@@ -13,23 +13,30 @@ p + geom_smooth(method="lm", fullrange=T) +
 graphics.off()
 
 output = data.frame()
-for(i in 1:length(unique(MyDF$Predator.lifestage))){
-  life = subset(MyDF, Predator.lifestage == unique(Predator.lifestage)[i])
-  for(n in 1: length(unique(life$Type.of.feeding.interaction))){
-    feed = subset(life, Type.of.feeding.interaction == unique(Type.of.feeding.interaction)[n])
+for(i in unique(MyDF$Predator.lifestage)){
+  life = subset(MyDF, Predator.lifestage == i)
+  for(n in unique(life$Type.of.feeding.interaction)){
+    feed = subset(life, Type.of.feeding.interaction == n)
+    print(paste(feed$Predator.lifestage[1], feed$Type.of.feeding.interaction[1]))
 #    if(nrow(feed)> 2){
       Summ = summary(lm(log(Predator.mass)~log(Prey.mass), data = feed))
+      if(is.null(Summ$fstatistic[1])){
+        fvalue = "NA"
+      }else{fvalue = as.numeric(Summ$fstatistic[1])}
       dataframe = data.frame(
-        unique(MyDF$Type.of.feeding.interaction)[n],
-        unique(MyDF$Predator.lifestage)[i],
+        n,
+        i,
         r2 = Summ$r.squared,
         inter = Summ$coefficients[1],
         slope = Summ$coefficients[2],
         pvalue = Summ$coefficients[8],
-        fvalue = as.numeric(Summ$fstatistic[1]))
+        fvalue = fvalue)
       output = rbind(output, dataframe)
 #    }
   }
 }
 names(output) = c("Type of Feeding Interaction", "Predator Lifestage", "R2", "intercept", "slope", "p-value", "F-value")
 write.csv(output, "../results/PP_Regress_Results.csv", row.names = F)
+
+
+

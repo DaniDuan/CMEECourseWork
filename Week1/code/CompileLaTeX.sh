@@ -2,7 +2,7 @@
 x=${1%.tex}
 pdflatex $x.tex
 pdflatex $x.tex
-bibtex $x.bib
+bibtex $x.aux
 pdflatex $x.tex
 pdflatex $x.tex
 evince $x.pdf &

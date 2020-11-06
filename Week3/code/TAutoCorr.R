@@ -1,12 +1,15 @@
 rm(list=ls()) #Clear workplace
 dev.off()
 
+library(ggplot2)
+
 data = load("../data/KeyWestAnnualMeanTemperature.RData")
 View(ats)
 plot(ats,type="p")
 
 temp1 = ats$Temp[2:length(ats$Temp)]
 temp2 = ats$Temp[1:length(ats$Temp)-1]
+temp = data.frame(temp1, temp2)
 cor = cor(temp1, temp2)
 cor.test(temp1,temp2)
 
@@ -19,7 +22,14 @@ for(i in 1:10000){
   cor_random = c(cor_random,x)
 }
 
-pdf("Autocorrelation_plot.pdf", 8,5)
+pdf("../results/temperature.pdf", 8,5)
+qplot(temp1, temp2, data = temp, geom="point", xlab = "t-1 (degree)", ylab = "t (degree)")+
+  geom_smooth(method="lm", fullrange=T)+ theme_bw()
+graphics.off()
+
+summary(lm(temp1~temp2))
+
+pdf("../results/Autocorrelation_plot.pdf", 8,5)
 plot(density(cor_random), xlab = "Correlation Coefficients", main = "")
 abline(v=cor, lty=2)
 text(x = cor, y = 3.5, labels = "correlation between\nsuccessive years\nr = 0.326")

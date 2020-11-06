@@ -63,7 +63,7 @@ Shell scripts for courseworks in **shell scripting** and scientific documents wi
 
 <br/>
 
-- [x] Week2
+- [x] **Week2**
 
 Biological computing in **Python** :
 
@@ -91,7 +91,7 @@ Biological computing in **Python** :
 
 <br/>
 
-- [x] Week3
+- [x] **Week3**
 
 Biological Computing in **R**: 
 
@@ -123,7 +123,7 @@ Biological Computing in **R**:
 
 ### Chapter 2: Data analysis and statistics
 
-- [x] Week3
+- [x] **Week3**
 
 Data Management and Visualization: 
 
