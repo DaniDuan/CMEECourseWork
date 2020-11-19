@@ -1,3 +1,5 @@
+"""Regular expressions (regex) are a tool to find patterns (not just a particular sequence of characters) in strings. """
+
 import re
 my_string = "A given string."
 match = re.search(r'\s', my_string) #\s: any whitespace character

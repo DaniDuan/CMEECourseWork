@@ -1,4 +1,34 @@
+"""Numerical computing in Python"""
+
 import scipy as sc
+import numpy as np
+
+#Using numpy
+a = np.array(range(5))
+a
+print(type(a))
+print(type(a[0]))
+
+a = np.array(range(5), float)
+a 
+a.dtype
+
+x = np.arange(5)
+x = np.arange(5.)
+x
+x.shape
+
+b = np.array([i for i in range(10) if i % 2 == 1])
+b
+
+c = b.tolist()
+c
+
+mat = np.array([[0,1],[2,3]])
+mat
+mat.shape
+
+#Using scipy
 a = sc.array(range(5))
 a
 print(type(a))
@@ -70,6 +100,7 @@ scipy.stats.randint.rvs(0,10, size=7) #random integers
 import scipy.integrate as integrate
 
 def dCR_dt(pops, t=0):
+    """Returns the growth rate of consumer and resource population at any given time step"""
     R = pops[0]
     C = pops[1]
     dRdt = r * R - a * R * C

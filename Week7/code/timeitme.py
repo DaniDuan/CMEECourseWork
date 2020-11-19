@@ -13,10 +13,10 @@ from profileme import my_join as my_join_join
 from profileme2 import my_join as my_join
 
 
-%timeit my_squares_loops(iters)
-%timeit my_squares(iters)
-%timeit my_join_join(iters, mystring)
-%timeit my_join(iters, mystring)
+# %timeit my_squares_loops(iters)
+# %timeit my_squares(iters)
+# %timeit my_join_join(iters, mystring)
+# %timeit my_join(iters, mystring)
 
 
 import time

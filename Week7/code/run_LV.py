@@ -1,3 +1,5 @@
+"""Runs both LV1.py and LV2.py with appropriate arguments."""
+
 from LV1 import main as lv1run
 from LV2 import main as lv2run
 import cProfile

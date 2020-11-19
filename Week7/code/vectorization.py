@@ -1,8 +1,11 @@
+"""Showing the difference in runtime between a loop method and a vectorized method using numpy."""
+
 import scipy as sc
 import matplotlib.pylab as p
 
 
 def loop_product(a, b):
+    """a loop-based function to calculate the entrywise product of two 1D arrays"""
     N = len(a)
     c = sc.zeros(N)
     for i in range(N):
@@ -10,6 +13,7 @@ def loop_product(a, b):
     return c
 
 def vect_product(a, b):
+    """a vectorized function to calculate the entrywise product of two 1D arrays"""
     return sc.multiply(a, b)
 
 
@@ -45,19 +49,16 @@ p.show()
 
 
 #When to vectorize? 
-N = 1000000000
+#Try following scripts
+#Overloading, automatically kills
 
-a = sc.random.rand(N)
-b = sc.random.rand(N)
-c = vect_product(a, b)
+# N = 1000000000
 
-del a
-del b
-del c
+# a = sc.random.rand(N)
+# b = sc.random.rand(N)
+# c = vect_product(a, b)
 
-
-
-
-
-
+# del a
+# del b
+# del c
 

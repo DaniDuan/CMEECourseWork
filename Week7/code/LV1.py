@@ -1,3 +1,5 @@
+"""Fitting the Lotka-Volterra model and generating population dynamics graphs"""
+
 import scipy as sc
 import scipy.integrate as integrate
 import matplotlib.pylab as p
@@ -6,6 +8,7 @@ import sys
 
 
 def plot_f1(pops, t, r, a, z, e):
+    """Generating the Consumer-Resource population dynamics graph with time"""
     f1 = p.figure()
     p.plot(t, pops[:,0], 'g-', label='Resourse density')
     p.plot(t, pops[:,1], 'b-', label='Consumer density')
@@ -18,6 +21,7 @@ def plot_f1(pops, t, r, a, z, e):
 
 
 def plot_f2(pops, r, a, z, e):
+    """Generating the Consumer-Resource population dynamics graph"""
     f2 = p.figure()
     p.grid()
     p.plot(pops[:,0], pops[:,1],'r-')
@@ -28,6 +32,7 @@ def plot_f2(pops, r, a, z, e):
 
 
 def save_figs(f1, f2): 
+    """Saving figures """
     figs = PdfPages('../results/LV_model.pdf')
     figs.savefig(f1)
     figs.savefig(f2)
@@ -36,12 +41,14 @@ def save_figs(f1, f2):
 
 
 def main(argv):
+    """Main entry point of the program"""
     r = 1
     a = 0.1 
     z = 1.5
     e = 0.75
 
     def dCR_dt(pops, t=0):
+        """Returns the growth rate of consumer and resource population at any given time step"""
         R = pops[0]
         C = pops[1]
         dRdt = r * R - a * R * C
