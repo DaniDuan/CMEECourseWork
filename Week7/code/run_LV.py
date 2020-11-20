@@ -9,15 +9,17 @@ lv1run([])
 lv2run([1,5000,0.5,1.5,0.75])
 
 pr = cProfile.Profile() #creating a new profile
+
 pr.enable() #enabling the profile
 lv1run([]) #run the program for profiling 
 pr.disable() #disabling the profile
+ps = pstats.Stats(pr)
+ps.sort_stats('cumtime').print_stats(15)   # Sort by cumulative time spent in the function
 
 pr.enable()
 lv2run([])
 pr.disable()
-
 ps = pstats.Stats(pr)
-ps.sort_stats('time').print_stats(20)   # Sort by calls only
+ps.sort_stats('cumtime').print_stats(15)   # Sort by cumulative time spent in the function
 
 

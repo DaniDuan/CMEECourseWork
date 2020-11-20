@@ -1,6 +1,4 @@
-./code/*
-!./code/*.py
-!./code/*.R
-!./results/.gitkeep
-./sandbox/*
-!/sandbox/.gitkeep
+results
+sandbox
+
+!.gitkeep
