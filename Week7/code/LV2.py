@@ -18,7 +18,8 @@ def plot_f1(pops, t, r, K, a, z, e):
     p.xlabel('Time')
     p.ylabel('Population density')
     p.title('Consumer-Resource population dynamics')
-    p.text(10, 12, 'r=%s; K=%s; a=%s;\nz=%s; e=%s' % (str(round(r,2)), str(round(K,2)), str(round(a,2)), str(round(z,2)), str(round(e,2))))
+    box = dict(boxstyle = "Round", facecolor = "white", alpha = 0.7)
+    p.text(15, max(pops[:, 0]), 'r=%s\nK=%s\na=%s\nz=%s\ne=%s' % (str(round(r,2)), str(round(K,2)), str(round(a,2)), str(round(z,2)), str(round(e,2))), horizontalalignment='right', verticalalignment = "top", bbox = box)
     return f1
 
 
@@ -31,7 +32,8 @@ def plot_f2(pops, r, K, a, z, e):
     p.xlabel('Resource density')
     p.ylabel('Consumer density')
     p.title('Consumer-Resource population dynamics')
-    p.text(8, 7, 'r=%s; K=%s; a=%s;\nz=%s; e=%s' % (str(round(r,2)), str(round(K,2)), str(round(a,2)), str(round(z,2)), str(round(e,2))))
+    box = dict(boxstyle = "Round", facecolor = "white", alpha = 0.7)
+    p.text(max(pops[:, 0]), max(pops[:, 1]), 'r=%s\nK=%s\na=%s\nz=%s\ne=%s' % (str(round(r,2)), str(round(K,2)), str(round(a,2)), str(round(z,2)), str(round(e,2))), horizontalalignment='right', verticalalignment = "top", bbox = box)
     return f2
 
 

@@ -26,21 +26,6 @@ regex = re.compile(pattern)
 for match in regex.finditer(text):
     print(match.group())
 
-#Long version
-# pattern_kingdom = r"Kingdom[\w\s]+\s+\W[\s\w]+,[\s\w]+,[\s\w]+?\s"
-# regex_Kingdom = re.compile(pattern_kingdom)
-# for match_k in regex_Kingdom.finditer(text):
-#     print(match_k.group())
-
-# pattern_phylum = r"Phylum[\s\w]+\s+\W[\s\w]+,[\s\w]+,[\s\w]+?\s"
-# regex_phylum = re.compile(pattern_phylum)
-# for match_p in regex_phylum.finditer(text):
-#     print(match_p.group())
-
-# pattern_species = r"Species[\s\w]+\([\s\w]+,[\s\d]+\)\s\W\s\w+\W[\s\w]+,[\s\w]+,\s[\w\s]{18}|Species[\s\w]+\([\s\w]+,[\s\d]+\)\s\W\s\w+-\w+\s\w+"
-# regex_species = re.compile(pattern_species)
-# for match_s in regex_species.finditer(text):
-#     print(match_s.group())
 
 
 
