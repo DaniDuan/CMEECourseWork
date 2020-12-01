@@ -10,7 +10,7 @@ names(cData) = c("ID", "trait_name", "trait_value", "trait_unit","consumer", "ha
 cData = cData[-which(cData$trait_value < 0),] # Getting rid of negative trait values
 cData$temp = as.numeric(cData$temp)
 
-
+write.csv(cData, "../results/cData.csv", row.names = F)
 #############Fitting linear models##############
 ## Fitting and plotting all fitted linear model
 lm2_model_fitting = data.frame()
@@ -116,6 +116,7 @@ Briere_AIC$T0 = as.numeric(Briere_AIC$T0)
 Briere_AIC$Tm = as.numeric(Briere_AIC$Tm)
 Briere_AIC$B0 = as.numeric(Briere_AIC$B0)
 
+write.csv(Briere_AIC, "../results/Briere_AIC.csv", row.names = F)
 
 ###########Fitting Schoolfield model###################
 ## Defining Schoolfield model function
@@ -133,6 +134,8 @@ sch_cData$temp = sch_cData$temp+273.15
 sch_cData$tran_kT = -1/(k*sch_cData$temp)
 sch_cData$tran_kTT = sch_cData$tran_kT+1/(283.15*k)
 sch_cData = sch_cData[-which(sch_cData$lnB == -Inf),]
+
+write.csv(sch_cData, "../results/sch_cData.csv", row.names = F)
 
 # Fitting Arrhenius, dividing all data with before and after deactivation;
 # get estimation values(possible starting values) on A0(B0) and Ea
@@ -252,6 +255,7 @@ School_fit_AIC = School_fit_AIC[-which(School_fit_AIC$lnB0 == 5),]
 School_fit_AIC = School_fit_AIC[-which(School_fit_AIC$Th == 375),]
 School_fit_AIC = School_fit_AIC[-which(School_fit_AIC$Th == 270),]
 
+write.csv(School_fit_AIC, "../results/School_fit_AIC.csv", row.names = F)
 
 ###########Plotting Everything################
 pdf("../results/2+3+b+s_plots_AIC.pdf")
