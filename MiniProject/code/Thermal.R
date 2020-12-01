@@ -64,7 +64,7 @@ Briere = function(Temp, T0, Tm, B0){
 }
 
 ## Fitting the Briere model
-Briere_model_fitting = as.data.frame(matrix(NA, nr=90300, nc=12)) # Creating an empty data frame for filling in
+Briere_model_fitting = as.data.frame(matrix(NaN, nr=90300, nc=12)) # Creating an empty data frame for filling in
 system.time(
   for(i in unique(cData$ID)){
     datai = subset(cData, cData$ID==i) #Data subset for iteration
@@ -81,7 +81,7 @@ system.time(
     for(n in 1:100){
       non_linear = try(nlsLM(trait_value~Briere(Temp = temp, T0, Tm, B0), datai,
                              list(T0 =T0_start, Tm = Tm_start, B0 = B0_start_range[n]),
-                             upper = c(40, 100, 2*B0_start_est), lower = c(-80, 0, 0),
+                             upper = c(40, 100, 2*B0_start_est), lower = c(-80, 0, -Inf),
                              control = list(maxiter = 500)), silent = T) # Fitting nlm Briere model
       if(class(non_linear) != "try-error" && non_linear$convInfo[2]<500){ #if no error detected and didnt exceed maxiter
         summ = summary(non_linear)
@@ -96,11 +96,6 @@ system.time(
     print(i) # The progress bar~~
   })
 colnames(Briere_model_fitting) = c('ID', 'consumer', 'trait_name', 'B0start', 'T0', 'Tm', 'B0', 'AIC', 'BIC', 'habitat', 'location', 'stage')
-Briere_model_fitting$ID = as.numeric(Briere_model_fitting$ID)
-Briere_model_fitting$T0 = as.numeric(Briere_model_fitting$T0)
-Briere_model_fitting$Tm = as.numeric(Briere_model_fitting$Tm)
-Briere_model_fitting$B0 = as.numeric(Briere_model_fitting$B0)
-Briere_model_fitting$AIC = as.numeric(Briere_model_fitting$AIC)
 
 # #Output csv
 write.csv(Briere_model_fitting, "../results/Briere_model_fitting_FullResult.csv", row.names = F)
@@ -113,12 +108,19 @@ for(i in unique(Briere_model_fitting$ID)){
   x = Briere_model_fitting[Briere_model_fitting$ID == i,][which.min(Briere_model_fitting$AIC[Briere_model_fitting$ID == i]),]
   Briere_AIC = rbind(Briere_AIC,x)
 }
+Briere_AIC = Briere_AIC[-which(Briere_AIC$T0 == -80),]
+Briere_AIC = Briere_AIC[-which(Briere_AIC$Tm == 100),]
+Briere_AIC = Briere_AIC[-which(Briere_AIC$T0 == 40),]
+Briere_AIC$ID = as.numeric(Briere_AIC$ID)
+Briere_AIC$T0 = as.numeric(Briere_AIC$T0)
+Briere_AIC$Tm = as.numeric(Briere_AIC$Tm)
+Briere_AIC$B0 = as.numeric(Briere_AIC$B0)
 
 
 ###########Fitting Schoolfield model###################
 ## Defining Schoolfield model function
 Schoolfield = function(tran_kT, lnB0, Th, Ea, Eh){
-  return(lnB0+(tran_kT+(1/283.15*k))*Ea-log(1+exp((1/(Th*k)+tran_kT)*Eh)))
+  return(lnB0+(tran_kT+1/(283.15*k))*Ea-log(1+exp((1/(Th*k)+tran_kT)*Eh)))
 }
 
 ## Fitting lnB ~ -1/k*(1/T-1/283.15) as linear model (Arrhenius)
@@ -182,6 +184,7 @@ Arrhenius = read.csv("../results/Arrhenius.csv", header = T)
 
 ## Fitting schoolfield with mean start values calculated using Arrhenius
 School_fit = data.frame()
+system.time(
 for(i in Arrhenius$ID){
   Adatai = subset(Arrhenius, Arrhenius$ID == i) # Data subset for iteration(start values)
   datai = subset(sch_cData, ID ==i) # Data subset for iteration
@@ -201,7 +204,8 @@ for(i in Arrhenius$ID){
     Ea_start = sample(Ea_range,1); Eh_start = sample(Eh_range,1)
     School_model = try(nlsLM(lnB~Schoolfield(tran_kT = tran_kT, lnB0, Th, Ea, Eh),subset(sch_cData, ID ==i), 
                              list(lnB0 = lnB0_start, Th = Th_start, Ea= Ea_start, Eh = Eh_start),
-                             upper = c(Inf, 375, 5, 20), lower = c(-Inf, 270, 0, 0),
+                             upper = c(5, 375, 5, 20), 
+                             lower = c(-Inf, 270, 0, 0), 
                              control = list(maxiter = 500)), silent = T)
     if(class(School_model) != "try-error"){
       if(School_model$convInfo[2]<500){
@@ -229,7 +233,7 @@ for(i in Arrhenius$ID){
     }
   }
   print(i) # The progress bar~
-}
+})
 
 # #Output csv
 write.csv(School_fit, "../results/School_fit.csv", row.names = F)
@@ -242,6 +246,11 @@ for(i in unique(School_fit$ID)){
   x = School_fit[School_fit$ID == i,][which.min(School_fit$AIC[School_fit$ID == i]),]
   School_fit_AIC = rbind(School_fit_AIC,x)
 }
+School_fit_AIC = School_fit_AIC[-which(School_fit_AIC$Ea == 5),]
+School_fit_AIC = School_fit_AIC[-which(School_fit_AIC$Eh == 20),]
+School_fit_AIC = School_fit_AIC[-which(School_fit_AIC$lnB0 == 5),]
+School_fit_AIC = School_fit_AIC[-which(School_fit_AIC$Th == 375),]
+School_fit_AIC = School_fit_AIC[-which(School_fit_AIC$Th == 270),]
 
 
 ###########Plotting Everything################
@@ -261,12 +270,12 @@ for(i in unique(cData$ID)){
     plm3_pre = predict(plm3, newdata = list(temp = t_points))
     lines(t_points, plm3_pre, col = 3)}
   Bdatai = subset(Briere_AIC, Briere_AIC$ID == i)
-  nlm_pre = Briere_AIC$B0[Briere_AIC$ID == i]*t_points*(t_points-Briere_AIC$T0[Briere_AIC$ID == i])*(Briere_AIC$Tm[Briere_AIC$ID == i]-t_points)^0.5
+  nlm_pre = Bdatai$B0*t_points*(t_points-Bdatai$T0)*(Bdatai$Tm-t_points)^0.5
   try(lines(t_points, nlm_pre, col = 4), silent = T)
   datas = subset(sch_cData, sch_cData$ID == i) # Data subset for iteration(Schoolfield)
   dataA = subset(School_fit_AIC, School_fit_AIC$ID ==i) # Data subset for starting values
   tran_kT = -1/(k*(t_points+273.15))
-  nlm_pre_school = exp(School_fit_AIC$lnB0[School_fit_AIC$ID == i])*exp((tran_kT+(1/283.15*k))*School_fit_AIC$Ea[School_fit_AIC$ID == i])/(1+exp((1/(School_fit_AIC$Th[School_fit_AIC$ID == i]*k)+tran_kT)*School_fit_AIC$Eh[School_fit_AIC$ID == i]))
+  nlm_pre_school = exp(dataA$lnB0+(tran_kT+1/(283.15*k))*dataA$Ea)/(1+exp((1/(dataA$Th*k)+tran_kT)*dataA$Eh))
   try(lines(t_points, nlm_pre_school, col = 7), silent = T)
   legend("topleft", legend = c("quadratic","cubic", "Briere", "Schoolfield"), lwd = 2, col = c(2:4, 7))
   text(max(datai$temp), 1.1*max(datai$trait_value), i, pos = c(1,2))
@@ -277,7 +286,7 @@ graphics.off()
 
 ##############Comparing models based on AIC values############
 #Comparing and selecting the lowest AIC values as the best fit
-Compare_AIC = as.data.frame(matrix(NA, nr=903, nc=5))
+Compare_AIC = as.data.frame(matrix(NaN, nr=903, nc=5))
 for(i in 1:903){
   Compare_AIC[i,1] = i
   if(any(lm2_model_fitting$ID == i,na.rm = T)) Compare_AIC[i, 2] = lm2_model_fitting$AIC[lm2_model_fitting$ID == i]
@@ -285,12 +294,13 @@ for(i in 1:903){
   if(any(Briere_AIC$ID == i, na.rm = T)) Compare_AIC[i, 4] = Briere_AIC$AIC[Briere_AIC$ID == i]
   if(any(School_fit_AIC$ID == i, na.rm = T)) Compare_AIC[i, 5] = School_fit_AIC$AIC[School_fit_AIC$ID == i]
 }
-
 colnames(Compare_AIC) = c("ID", "quadratic", "cubic", "Briere", "Schoolfield")
 Compare_AIC = Compare_AIC[-which(is.na(Compare_AIC$quadratic)),]
 Best_fit = colnames(Compare_AIC[,2:5])[apply(Compare_AIC[,2:5], 1, function(x) which(x == min(x, na.rm = T)))]
-Best_fit_nlm = colnames(Compare_AIC[,4:5])[apply(Compare_AIC[,4:5], 1, function(x) which(x == min(x, na.rm = T)))]
-Compare_AIC = cbind(Compare_AIC, Best_fit,Best_fit_nlm, lm2_model_fitting[,c(2:3, 8:10)])
+Compare_AIC = cbind(Compare_AIC, Best_fit, lm2_model_fitting[,c(2:3, 8:10)])
+
+nrow(Compare_AIC[Compare_AIC$cubic - Compare_AIC$Schoolfield < -2,])/nrow(Compare_AIC)
+
 
 # #Export csv
 write.csv(Compare_AIC, "../results/Compare_AIC.csv", row.names = F)
@@ -301,13 +311,11 @@ sum(Compare_AIC$Best_fit == "quadratic")/nrow(Compare_AIC) #percentage of this m
 sum(Compare_AIC$Best_fit == "cubic")/nrow(Compare_AIC)
 sum(Compare_AIC$Best_fit == "Briere")/nrow(Compare_AIC)
 sum(Compare_AIC$Best_fit == "Schoolfield")/nrow(Compare_AIC)
+nrow(Compare_AIC[Compare_AIC$cubic - Compare_AIC$Schoolfield > 2,])/nrow(Compare_AIC)
 
-sum(Compare_AIC$Best_fit_nlm == "Briere")/nrow(Compare_AIC)
-sum(Compare_AIC$Best_fit_nlm == "Schoolfield")/nrow(Compare_AIC)
 
 # Subsets with trait name
 unique(Compare_AIC$trait_name)
-
 net_photosynthesis_rate = subset(Compare_AIC, Compare_AIC$trait_name == "net photosynthesis rate")
 gross_photosynthesis_rate = subset(Compare_AIC, Compare_AIC$trait_name == "gross photosynthesis rate")
 respiration_rate = subset(Compare_AIC, Compare_AIC$trait_name == "respiration rate")
@@ -320,3 +328,5 @@ for(i in unique(Compare_AIC$Best_fit)){
   resp = c(resp, sum(respiration_rate$Best_fit == i)/nrow(respiration_rate))
 }
 subAIC_traitname = cbind(bestfit, net, gross, resp)
+
+
