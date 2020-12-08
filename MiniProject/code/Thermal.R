@@ -2,6 +2,9 @@ rm(list=ls())
 graphics.off()
 library(minpack.lm)
 library(ggplot2)
+library(reshape2)
+library(grid)
+
 
 data = read.csv("../data/ThermRespData.csv")
 # Store all possible relevant information in a new data frame
@@ -10,22 +13,29 @@ names(cData) = c("ID", "trait_name", "trait_value", "trait_unit","consumer", "ha
 cData = cData[-which(cData$trait_value < 0),] # Getting rid of negative trait values
 cData$temp = as.numeric(cData$temp)
 
-write.csv(cData, "../results/cData.csv", row.names = F)
+#write.csv(cData, "../results/cData.csv", row.names = F)
+
 #############Fitting linear models##############
 ## Fitting and plotting all fitted linear model
 lm2_model_fitting = data.frame()
 lm3_model_fitting = data.frame()
+a = c()
 
 for(i in unique(cData$ID)){
   datai = subset(cData, cData$ID== i) #Data subset for iteration
+  if(nrow(datai) >= 5) a = c(a, i) # ID with more than 5 data points
   #Fitting the quadratic
   plm2 = try(lm(trait_value ~poly(temp,2), data = datai), silent = T) #Fitting the quadratic model
   if(class(plm2) != "try-error"){
     summ = summary(plm2)
+    RSS_i = sum(residuals(plm2)^2) # Residual sum of squares
+    n = nrow(datai) # sample size
+    p_i = length(coef(plm2)) # Number of parameters
+    AICc_i = n+2+n*log((2*pi)/n)+n*log(RSS_i) + 2*p_i*(n/(n-p_i-1))
     dataframe = data.frame( #Outputing the model fitting dataframe
       ID = i, consumer = unique(datai$consumer), trait_name = unique(datai$trait_name),
       r2 = summ$r.squared, intercept = summ$coefficients[1],
-      AIC = AIC(plm2), BIC = BIC(plm2),
+      AIC = AIC(plm2), AICc = AICc_i, BIC = BIC(plm2),
       habitat = unique(datai$habitat), location = unique(datai$location), stage = unique(datai$stage)
     )
     #Combining dataframe
@@ -35,10 +45,14 @@ for(i in unique(cData$ID)){
   plm3 = try(lm(trait_value ~poly(temp,3),data = datai), silent = T) #Fitting the cubic model
   if(class(plm3) != "try-error"){
     summ = summary(plm3)
+    RSS_i = sum(residuals(plm3)) # Residual sum of squares
+    n = nrow(datai) # sample size
+    p_i = length(coef(plm3)) # Number of parameters
+    AICc_i = n+2+n*log((2*pi)/n)+n*log(RSS_i) + 2*p_i*(n/(n-p_i-1))
     dataframe = data.frame( #Outputing the model fitting dataframe
       ID = i, consumer = unique(datai$consumer), trait_name = unique(datai$trait_name),
       r2 = summ$r.squared, intercept = summ$coefficients[1],
-      AIC = AIC(plm3), BIC = BIC(plm3),
+      AIC = AIC(plm3), AICc = AICc_i, BIC = BIC(plm3),
       habitat = unique(datai$habitat), location = unique(datai$location), stage = unique(datai$stage))
     lm3_model_fitting = rbind(lm3_model_fitting, dataframe) #Combining dataframe
   }
@@ -48,6 +62,7 @@ for(i in unique(cData$ID)){
 # count how many fitting curves have r2>0.9
 sum(lm2_model_fitting$r2>0.9)/length(unique(data$ID))
 sum(lm3_model_fitting$r2>0.9)/length(unique(data$ID))
+length(a)/length(unique(data$ID)) #How many datasets have more than 5 points
 
 # #Exporting csv
 write.csv(lm2_model_fitting, "../results/quadratic.csv", row.names = F)
@@ -94,7 +109,8 @@ system.time(
       }
     }
     print(i) # The progress bar~~
-  })
+  }
+)
 colnames(Briere_model_fitting) = c('ID', 'consumer', 'trait_name', 'B0start', 'T0', 'Tm', 'B0', 'AIC', 'BIC', 'habitat', 'location', 'stage')
 
 # #Output csv
@@ -118,6 +134,7 @@ Briere_AIC$B0 = as.numeric(Briere_AIC$B0)
 
 write.csv(Briere_AIC, "../results/Briere_AIC.csv", row.names = F)
 
+
 ###########Fitting Schoolfield model###################
 ## Defining Schoolfield model function
 Schoolfield = function(tran_kT, lnB0, Th, Ea, Eh){
@@ -140,7 +157,7 @@ write.csv(sch_cData, "../results/sch_cData.csv", row.names = F)
 # Fitting Arrhenius, dividing all data with before and after deactivation;
 # get estimation values(possible starting values) on A0(B0) and Ea
 ID = c(); consumer = c(); stage= c(); trait_name = c(); Th = c(); lnA0 = c(); Ea = c(); Eh = c(); 
-r2_befdeact = c(); r2_deact = c(); before = c(); after = c()
+r2_befdeact = c(); r2_deact = c(); before = c(); after = c(); n = 0
 
 for(i in unique(sch_cData$ID)){
   datai = sch_cData[sch_cData$ID == i,] # Data subset for iteration
@@ -163,6 +180,7 @@ for(i in unique(sch_cData$ID)){
       before = c(before, i)}
     Ea = c(Ea, Ea_value)
     if(nrow(datai_deact)>1){ # At least two data points to fit a linear
+      n = n+1 #How many have a deactivation point?
       lm_sch_deact = lm(lnB~tran_kTT, data = datai_deact)
       summ_deact = summary(lm_sch_deact)
       Eh = c(Eh, -summ_deact$coefficients[2])
@@ -179,6 +197,7 @@ for(i in unique(sch_cData$ID)){
   }
 }
 Arrhenius = data.frame(ID, consumer, stage, trait_name, Th, lnA0, Ea, Eh,r2_befdeact, r2_deact)
+n/nrow(Arrhenius)
 
 # #Output csv
 write.csv(Arrhenius, "../results/Arrhenius.csv", row.names = F)
@@ -207,7 +226,7 @@ for(i in Arrhenius$ID){
     Ea_start = sample(Ea_range,1); Eh_start = sample(Eh_range,1)
     School_model = try(nlsLM(lnB~Schoolfield(tran_kT = tran_kT, lnB0, Th, Ea, Eh),subset(sch_cData, ID ==i), 
                              list(lnB0 = lnB0_start, Th = Th_start, Ea= Ea_start, Eh = Eh_start),
-                             upper = c(5, 375, 5, 20), 
+                             upper = c(5, 375, 1.5, 15), 
                              lower = c(-Inf, 270, 0, 0), 
                              control = list(maxiter = 500)), silent = T)
     if(class(School_model) != "try-error"){
@@ -222,6 +241,7 @@ for(i in Arrhenius$ID){
         n = nrow(datai) # sample size
         p_i = length(coef(School_model)) # Number of parameters
         AIC_i = n+2+n*log((2*pi)/n)+n*log(RSS_i) + 2*p_i
+        AICc_i = n+2+n*log((2*pi)/n)+n*log(RSS_i) + 2*p_i*(n/(n-p_i-1))
         BIC_i = n+2+n*log((2*pi)/n)+n*log(RSS_i) + p_i* log(n)
         dataframe = data.frame(
           ID = i,
@@ -229,7 +249,9 @@ for(i in Arrhenius$ID){
           Ea_start = Ea_start, Eh_start = Eh_start,
           lnB0 = summ$coefficients[1], Th = summ$coefficients[2],
           Ea = summ$coefficients[3], Eh = summ$coefficients[4],
-          r2 = Rsq_i, AIC = AIC_i, BIC = BIC_i
+          r2 = Rsq_i, AIC = AIC_i, AICc = AICc_i, BIC = BIC_i, 
+          trait_name = Adatai$trait_name, consumer = Adatai$consumer, 
+          habitat = unique(datai$habitat), stage = unique(datai$stage)
         )
         School_fit = rbind(School_fit, dataframe)
       }
@@ -249,13 +271,15 @@ for(i in unique(School_fit$ID)){
   x = School_fit[School_fit$ID == i,][which.min(School_fit$AIC[School_fit$ID == i]),]
   School_fit_AIC = rbind(School_fit_AIC,x)
 }
-School_fit_AIC = School_fit_AIC[-which(School_fit_AIC$Ea == 5),]
-School_fit_AIC = School_fit_AIC[-which(School_fit_AIC$Eh == 20),]
+School_fit_AIC = School_fit_AIC[-which(School_fit_AIC$Ea == 1.5),]
+School_fit_AIC = School_fit_AIC[-which(School_fit_AIC$Ea == 0),]
+School_fit_AIC = School_fit_AIC[-which(School_fit_AIC$Eh == 15),]
 School_fit_AIC = School_fit_AIC[-which(School_fit_AIC$lnB0 == 5),]
 School_fit_AIC = School_fit_AIC[-which(School_fit_AIC$Th == 375),]
 School_fit_AIC = School_fit_AIC[-which(School_fit_AIC$Th == 270),]
 
 write.csv(School_fit_AIC, "../results/School_fit_AIC.csv", row.names = F)
+
 
 ###########Plotting Everything################
 pdf("../results/2+3+b+s_plots_AIC.pdf")
@@ -315,6 +339,15 @@ sum(Compare_AIC$Best_fit == "quadratic")/nrow(Compare_AIC) #percentage of this m
 sum(Compare_AIC$Best_fit == "cubic")/nrow(Compare_AIC)
 sum(Compare_AIC$Best_fit == "Briere")/nrow(Compare_AIC)
 sum(Compare_AIC$Best_fit == "Schoolfield")/nrow(Compare_AIC)
+
+bar = cbind(quadratic = sum(Compare_AIC$Best_fit == "quadratic")/nrow(Compare_AIC),
+            cubic = sum(Compare_AIC$Best_fit == "cubic")/nrow(Compare_AIC),
+            Briere = sum(Compare_AIC$Best_fit == "Briere")/nrow(Compare_AIC),
+            Schoolfield = sum(Compare_AIC$Best_fit == "Schoolfield")/nrow(Compare_AIC))
+bar
+pdf("../results/bestfit.pdf")
+barplot(bar, xlab = "Model type", ylab = "Percentage of best fit", ylim = c(0, 0.5))
+graphics.off()
 nrow(Compare_AIC[Compare_AIC$cubic - Compare_AIC$Schoolfield > 2,])/nrow(Compare_AIC)
 
 
@@ -332,5 +365,85 @@ for(i in unique(Compare_AIC$Best_fit)){
   resp = c(resp, sum(respiration_rate$Best_fit == i)/nrow(respiration_rate))
 }
 subAIC_traitname = cbind(bestfit, net, gross, resp)
+colnames(subAIC_traitname) = c("bestfit", "net photosynthesis", "gross photosynthesis", "respiration")
+rownames(subAIC_traitname) = subAIC_traitname[,1]
+subAIC_traitname = subAIC_traitname[,2:4]
+subAIC_traitname = melt(subAIC_traitname)
+colnames(subAIC_traitname) = c("Best_fit", "trait_name", "trait_value")
+subAIC_traitname$trait_value = as.numeric(subAIC_traitname$trait_value)
+pdf("../results/sub_trait.pdf", width = 8, height = 6)
+ggplot(subAIC_traitname, mapping = aes(x = trait_name, y =trait_value, fill = Best_fit))+
+  geom_bar(stat = "identity", position = "fill", width = 0.5)+
+  labs(x = "Trait Name", y = "Percentage of Best Fit")+ theme_bw()
+graphics.off()
 
 
+pdf("../results/341.pdf")
+i = 341
+datai = subset(cData, cData$ID == i) # Data subset for iteration
+t_max = max(datai$temp)
+t_min = min(datai$temp)
+t_points = seq(t_min, t_max, 0.1)
+plot(datai$temp, datai$trait_value, xlab = "Temperature(celsius)", ylab = unique(datai$trait_name), ylim = c(0.95*min(datai$trait_value),1.1*max(datai$trait_value)))
+plm2 = try(lm(trait_value ~poly(temp,2), data = datai), silent = T)
+if(class(plm2) != "try-error"){
+  plm2_pre = predict(plm2, newdata = list(temp = t_points))
+  lines(t_points, plm2_pre, col = 2)}
+plm3 = try(lm(trait_value ~poly(temp,3), data = datai), silent = T)
+if(class(plm3) != "try-error"){
+plm3_pre = predict(plm3, newdata = list(temp = t_points))
+lines(t_points, plm3_pre, col = 3)}
+Bdatai = subset(Briere_AIC, Briere_AIC$ID == i)
+nlm_pre = Bdatai$B0*t_points*(t_points-Bdatai$T0)*(Bdatai$Tm-t_points)^0.5
+try(lines(t_points, nlm_pre, col = 4), silent = T)
+datas = subset(sch_cData, sch_cData$ID == i) # Data subset for iteration(Schoolfield)
+dataA = subset(School_fit_AIC, School_fit_AIC$ID ==i) # Data subset for starting values
+tran_kT = -1/(k*(t_points+273.15))
+nlm_pre_school = exp(dataA$lnB0+(tran_kT+1/(283.15*k))*dataA$Ea)/(1+exp((1/(dataA$Th*k)+tran_kT)*dataA$Eh))
+try(lines(t_points, nlm_pre_school, col = 7), silent = T)
+legend("topleft", legend = c("quadratic","cubic", "Briere", "Schoolfield"), lwd = 2, col = c(2:4, 7))
+text(30, 0.5, "AIC(cubic)=")
+text(33.5,0.5,round(AIC(plm3),2))
+text(30,0.45,"AIC(Schoolfield)=")
+text(34.5,0.45, round(School_fit_AIC$AIC[School_fit_AIC$ID == i], 2))
+graphics.off()
+
+School_fit_AIC = read.csv("../results/School_fit_AIC.csv", header = T) 
+unique(School_fit_AIC$habitat)
+School_fit_AIC$habitat[School_fit_AIC$habitat == "marine" | School_fit_AIC$habitat == "freshwater"] = "aquatic"
+summary(aov(Ea~habitat, School_fit_AIC))
+pairwise.t.test(School_fit_AIC$Ea, School_fit_AIC$habitat, p.adj = "none")
+summary(aov(Th~trait_name, School_fit_AIC))
+pairwise.t.test(School_fit_AIC$Th, School_fit_AIC$trait_name, p.adj = "none")
+summary(aov(Ea~trait_name, School_fit_AIC))
+summary(aov(Eh~trait_name, School_fit_AIC))
+
+pdf("../results/habitat.pdf")
+grid.newpage()
+pushViewport(viewport(layout = grid.layout(2,2)))
+print(qplot(habitat, Th, data = School_fit_AIC, geom = "boxplot", xlab = "", ylab = "Th (K)") +
+  theme(axis.text.x = element_text(angle = -12)),
+  vp = viewport(layout.pos.row = 1, layout.pos.col = 1)) 
+print(qplot(habitat, Ea, data = School_fit_AIC, geom = "boxplot", xlab = "", ylab = "Ea (eV)") +
+        theme(axis.text.x = element_text(angle = -12)),
+      vp = viewport(layout.pos.row = 1, layout.pos.col = 2))
+print(qplot(habitat, Eh, data = School_fit_AIC, geom = "boxplot", xlab = "", ylab = "Eh (eV)") +
+        theme(axis.text.x = element_text(angle = -12)),
+      vp = viewport(layout.pos.row = 2, layout.pos.col = 1))
+graphics.off()
+
+pdf("../results/traits.pdf")
+grid.newpage()
+pushViewport(viewport(layout = grid.layout(2,2)))
+print(qplot(trait_name, Th, data = School_fit_AIC, geom = "boxplot", xlab = "", ylab = "Th (K)") +
+        theme(axis.text.x = element_text(angle = -12)),
+      vp = viewport(layout.pos.row = 1, layout.pos.col = 1)) 
+print(qplot(trait_name, Ea, data = School_fit_AIC, geom = "boxplot", xlab = "", ylab = "Ea (eV)") +
+        theme(axis.text.x = element_text(angle = -12)),
+      vp = viewport(layout.pos.row = 1, layout.pos.col = 2))
+print(qplot(trait_name, Eh, data = School_fit_AIC, geom = "boxplot", xlab = "", ylab = "Eh (eV)") +
+        theme(axis.text.x = element_text(angle = -12)),
+      vp = viewport(layout.pos.row = 2, layout.pos.col = 1))
+graphics.off()
+
+boxplot(Th~habitat, School_fit_AIC)
