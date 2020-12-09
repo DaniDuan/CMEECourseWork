@@ -1,7 +1,7 @@
 # CMEE 2020 HPC excercises R code HPC run code proforma
 
 rm(list=ls()) # good practice in this instance
-source("jrosinde/jrosinde_HPC_2020_main.R")
+source("DaniDuan/DaniDuan_HPC_2020_main.R")
 # it should take a faction of a second to source your file
 # if it takes longer you're using the main file to do actual simulations
 # it should be used only for defining functions that will be useful for your cluster run and which will be marked automatically

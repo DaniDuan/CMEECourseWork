@@ -55,9 +55,9 @@ neutral_time_series <- function(community = init_community_max(7) , duration = 2
 question_8 <- function() {
   richness = neutral_time_series(community = init_community_max(100), duration = 200)
   graphics.off()# clear any existing graphs and plot your graph within the R window
-  plot(richness, pch = 1, cex = 0.75, ylab = "Diversity", xlab = "Generation", main = "Time Series Graph of a Neutral Model Simulation")
+  plot(richness, type = "l", frame.plot = F, ylab = "Diversity", xlab = "Generation", main = "Time Series Graph of a Neutral Model Simulation")
   abline(h = 1, lty = 3)
-  text(x = 160, y = 7.5, "Converging to diversity = 1")
+  text(x = 160, y = 17.5, "Converging to diversity = 1")
   return("If we wait long enough, the diversity will always converge to 1. Since in this system, all species are considered with same possibility for reproduction and replacement without speciation or new species being introduced, as one species' abundance increases, the probability of reproduction of that species would also increase, therefore the system will finally result in the homogeneity of species.")
 }
 
@@ -94,9 +94,9 @@ question_12 <- function()  {
   richness_max = neutral_time_series_speciation(community = init_community_max(100), speciation_rate = 0.1, duration = 200)
   richness_min = neutral_time_series_speciation(community = init_community_min(100), speciation_rate = 0.1, duration = 200)
   graphics.off()# clear any existing graphs and plot your graph within the R window
-  plot(richness_max, type = "l", pch = 1, cex = 0.75, col = 1, ylim = c(0,100), ylab = "Diversity", xlab = "Generation", main = "Time Series Graph of a Neutral Model Simulation")
+  plot(richness_max, frame.plot = F, type = "l", pch = 1, cex = 0.75, col = 1, ylim = c(0,100), ylab = "Diversity", xlab = "Generation", main = "Time Series Graph of a Neutral Model Simulation")
   lines(richness_min, pch = 1, cex = 0.75, col = 2)
-  legend('topright', c('richness_max','richness_min'), fill = c(1,2))
+  legend('topright', c('richness_max','richness_min'), fill = c(1,2), bty = "n")
   return("?Given time, the final convergence of diversity is determined by the speciation rate and the initial size of the community, but not related to the initial diversity of the system. Because when the rate of extinction is balanced by the rate of speciation, the diversity of this system will reach a dynamic equilibrium.")
 }
 
@@ -122,6 +122,8 @@ sum_vect <- function(x = c(1,3), y = c(1,0,5,2)) {
 
 # Question 16 
 question_16 <- function()  {
+  octave_max = 0
+  octave_min = 0
   community_max = init_community_max(100)
   community_min = init_community_min(100)
   for(i in 1:2200){ 
@@ -137,10 +139,10 @@ question_16 <- function()  {
   octave_max_mean = octave_max/101
   octave_min_mean = octave_min/101
   data = rbind(octave_max_mean,octave_min_mean)
-  colnames(data) = c(1,2,3,4,5,6)
+  colnames(data) = c("1","2-3","4-7","8-15","16-31","32-64")
   graphics.off()# clear any existing graphs and plot your graph within the R window
-  barplot(data, beside = T, ylab = "Number of Species", xlab = "Abundance Class", main = "Species Abundance Octave of Neutral Model Simulation",col = c(0,1))
-  legend("topright", c("octave_max", "octave_min"), fill = c(0,1))
+  barplot(data, beside = T, ylab = "Number of Species", ylim = c(0,11), xlab = "Species Abundance", main = "Species Abundance Octave of Neutral Model Simulation",col = c(0,1))
+  legend("topright", c("octave_max", "octave_min"), fill = c(0,1), bty = "n")
   return("Initial condition of the system does not matter, since this calculation was conducted after the system has already reached its dynamic equilibrium which is related to the speciation rate.")
 }
 
@@ -177,11 +179,6 @@ cluster_run <- function(speciation_rate = 0.1, size=100, wall_time=0.25, interva
   input_parameters = list(speciation_rate = 0.1, size=100, wall_time=10, interval_rich=1, interval_oct=10, burn_in_generations=200)
   save(richness_max, richness_min, octave_max, octave_min, community_max, community_min, time_spent, input_parameters,  file = output_file_name)
 }
-
-load(file = "my_test_file_1.rda")
-# richness_max; richness_min; octave_max; octave_min; community_max; community_min;
-# proc.time()-start_time; parameters
-
 
 # Questions 18 and 19 involve writing code elsewhere to run your simulations on the cluster
 
