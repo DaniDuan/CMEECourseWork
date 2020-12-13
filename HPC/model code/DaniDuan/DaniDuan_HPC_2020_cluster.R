@@ -5,7 +5,7 @@ graphics.off()
 iter <- as.numeric(Sys.getenv("PBS_ARRAY_INDEX"))
 # iter = 1
 
-source("DaniDuan_HPC_2020_main.R")
+source("/rds/general/user/dd1820/home/DaniDuan_HPC_2020_main.R")
 
 if(iter <= 25){size = 500
   }else if(iter > 25 && iter <= 50){size = 1000
@@ -13,6 +13,11 @@ if(iter <= 25){size = 500
   }else{size = 5000}
 
 set.seed(iter)
-cluster_run(speciation_rate = 0.005413, size = size, wall_time=0.25, interval_rich=1,
+
+if(exists("cluster_run")){print("OKAY")}else{print("DING!!WRONG")}
+
+cluster_run(speciation_rate = 0.005413, size = size, wall_time=11.5*60, interval_rich=1,
             interval_oct=size/10, burn_in_generations=8*size,
             output_file_name= paste("Neutral_cluster_", iter, ".rda", sep = ""))
+
+

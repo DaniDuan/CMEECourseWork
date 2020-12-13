@@ -97,7 +97,7 @@ question_12 <- function()  {
   plot(richness_max, frame.plot = F, type = "l", pch = 1, cex = 0.75, col = 1, ylim = c(0,100), ylab = "Diversity", xlab = "Generation", main = "Time Series Graph of a Neutral Model Simulation")
   lines(richness_min, pch = 1, cex = 0.75, col = 2)
   legend('topright', c('richness_max','richness_min'), fill = c(1,2), bty = "n")
-  return("?Given time, the final convergence of diversity is determined by the speciation rate and the initial size of the community, but not related to the initial diversity of the system. Because when the rate of extinction is balanced by the rate of speciation, the diversity of this system will reach a dynamic equilibrium.")
+  return("Given time, the final convergence of diversity is determined by the speciation rate and the initial size of the community, but not related to the initial diversity of the system. Because when the rate of extinction is balanced by the rate of speciation, the diversity of this system will reach a dynamic equilibrium.")
 }
 
 # Question 13
@@ -198,22 +198,37 @@ plot_cluster_results <- function()  {
 }
 
 # Question 21
-question_21 <- function()  {
-    
-  return("type your written answer here")
+question_21 <- function(size = 8, width = 3)  {
+    dimension = log(size)/log(width)
+    explanation = "In order for the squares to be three times as wide, 8 times the amount of material is needed, and width^dimension = size"
+    answer21 = list(dimension, explanation)
+  return(answer21)
 }
 
 # Question 22
-question_22 <- function()  {
-    
-  return("type your written answer here")
+question_22 <- function(size = 20, width = 3)  {
+  dimension = log(size)/log(width)
+  explanation = "In this case, 20 times amount of material is needed for the squares to be 3 times as wide, therefore the dimension is calculated as log(20)/log(3)"
+  answer22 = list(dimension, explanation)
+  return(answer22)
 }
 
 # Question 23
-chaos_game <- function()  {
-  # clear any existing graphs and plot your graph within the R window
-  
-  return("type your written answer here")
+chaos_game <- function(x = c(0,3,4), y = c(0,4,1), X = c(0,0), max_time = 15)  {
+  start_time = proc.time()[3]
+  graphics.off()# clear any existing graphs and plot your graph within the R window
+  xy = data.frame(x,y)
+  plot(xy, xlab = "", ylab = "")
+  text(0,0.3,"A")
+  text(3.2,4,"B")
+  text(4,0.7, "C")
+  points(X[1],X[2], pch = 19, cex = 0.001)
+  repeat{
+    a = sample(3,1)
+    X = c((X[1]+xy[a,1])/2, (X[2]+xy[a,2])/2)
+    points(X[1],X[2], pch = 19, cex = 0.001)
+    if(proc.time()[3]-start_time >= max_time){break}}
+  return("Given enough times of iteration, a Sierpinski Gasket triangle was generated, in which for every triangle pattern to be 2 times as wide, 3 times amount of the material is needed, therefore has a dimension of log(3)/log(2) = 1.584963.")
 }
 
 # Question 24
