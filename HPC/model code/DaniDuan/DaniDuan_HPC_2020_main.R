@@ -232,55 +232,78 @@ chaos_game <- function(x = c(0,3,4), y = c(0,4,1), X = c(0,0), max_time = 15)  {
 }
 
 # Question 24
-turtle <- function(start_position, direction, length)  {
-    
-  return() # you should return your endpoint here.
+turtle <- function(start_position = c(0,0), direction = pi/2, length = 1)  {
+    x = start_position[1]+length*cos(direction)
+    y = start_position[2]+length*sin(direction)
+    endpoint = c(x,y)
+    lines(c(start_position[1],x),c(start_position[2],y))
+  return(endpoint) # you should return your endpoint here.
 }
 
 # Question 25
-elbow <- function(start_position, direction, length)  {
-  
-}
+elbow <- function(start_position = c(0,0), direction = pi/2, length = 1)  {
+  endpoint = turtle(start_position, direction, length)
+  turtle(start_position = endpoint, direction = direction - pi/4, length = 0.95*length)
+  }
 
 # Question 26
-spiral <- function(start_position, direction, length)  {
-  
-  return("type your written answer here")
+spiral <- function(start_position = c(0,0), direction = pi/2, length = 1)  {
+  endpoint = turtle(start_position, direction, length)
+  if(length >= 0.0001){
+  spiral(start_position = endpoint, direction = direction - pi/4, length = 0.95*length)}
+  return("Error: C stack usage 7969348 is too close to the limit. Because the lines became too short (infinitely approaching 0) after certain amount of iterations, therefore requires a limitation on length. ")
 }
 
 # Question 27
 draw_spiral <- function()  {
-  # clear any existing graphs and plot your graph within the R window
-  
+  graphics.off()# clear any existing graphs and plot your graph within the R window
+  plot(1, type="n", xlab="", ylab="", xlim=c(-2.5, 2.5), ylim=c(-2.5, 2.5))
+  spiral(start_position = c(0,0), direction = pi/4, length = 1)
 }
 
 # Question 28
-tree <- function(start_position, direction, length)  {
-  
+tree <- function(start_position = c(0,0), direction = pi/2, length = 1)  {
+  endpoint = turtle(start_position, direction, length)
+  start_time = proc.time()
+  if(length >= 0.001){
+    tree(start_position = endpoint, direction = direction - pi/4, length = 0.65 * length)
+    tree(start_position = endpoint, direction = direction + pi/4, length = 0.65 * length)}
 }
 
 draw_tree <- function()  {
-  # clear any existing graphs and plot your graph within the R window
-
+  graphics.off()# clear any existing graphs and plot your graph within the R window
+  plot(1, type="n", xlab="", ylab="", xlim=c(-2, 2), ylim=c(0, 3))
+  tree(start_position = c(0,0), direction = pi/2, length = 1)
 }
 
 # Question 29
-fern <- function(start_position, direction, length)  {
-  
+fern <- function(start_position = c(0,0), direction = pi/2, length = 1)  {
+  endpoint = turtle(start_position, direction, length)
+  start_time = proc.time()
+  if(length >= 0.01){
+    fern(start_position = endpoint, direction = direction, length = 0.87 * length)
+    fern(start_position = endpoint, direction = direction + pi/4, length = 0.38 * length)}
 }
 
 draw_fern <- function()  {
-  # clear any existing graphs and plot your graph within the R window
-
+  graphics.off()# clear any existing graphs and plot your graph within the R window
+  plot(1, type="n", xlab="", ylab="", xlim=c(-2, 2), ylim=c(0, 8))
+  fern(start_position = c(0,0), direction = pi/2, length = 1)
 }
 
 # Question 30
-fern2 <- function(start_position, direction, length)  {
-  
+fern2 <- function(start_position = c(0,0), direction = pi/2, length = 1, dir =1 )  {
+  endpoint = turtle(start_position, direction, length)
+  start_time = proc.time()
+  if(length >= 0.01){
+    fern2(start_position = endpoint, direction = direction, length = 0.87 * length, dir = -dir)
+    fern2(start_position = endpoint, direction = direction + dir * pi/4, length = 0.38 * length, dir = dir)}
 }
-draw_fern2 <- function()  {
-  # clear any existing graphs and plot your graph within the R window
 
+draw_fern2 <- function()  {
+  graphics.off()# clear any existing graphs and plot your graph within the R window
+  plot(1, type="n", xlab="", ylab="", xlim=c(-2, 2), ylim=c(0, 8))
+  fern2(start_position = c(0,0), direction = pi/2, length = 1, dir = 1)
 }
 
 # Challenge questions - these are optional, substantially harder, and a maximum of 16% is available for doing them.  
