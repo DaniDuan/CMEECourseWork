@@ -316,7 +316,7 @@ chaos_game <- function(x = c(0,3,4), y = c(0,4,1), X = c(0,0), max_time = 15)  {
   xy = data.frame(x,y) # Saving the locations of the three points into a dataframe
   plot(xy, xlab = "", ylab = "")
   text(0,0.3,"A") # Labeling the three points
-  text(3.2,4,"B")
+  text(xy[2,1]+0.3,xy[2,2],"B")
   text(4,0.7, "C")
   points(X[1],X[2], pch = 19, cex = 0.001) # The start of point vector X
   repeat{
@@ -434,7 +434,7 @@ Challenge_A <- function() {
   richness_max_lower = richness_max_mean - richness_max_ci
   richness_min_upper = richness_min_mean + richness_min_ci
   richness_min_lower = richness_min_mean - richness_min_ci
-  plot(richness_max_mean, frame.plot = F, type = "l", pch = 1, cex = 0.75, col = 1, ylim = c(0,100), ylab = "Diversity", xlab = "Generation", main = "Time Series Graph of a Neutral Model Simulation")
+  plot(richness_max_mean, frame.plot = F, type = "l", pch = 1, cex = 0.75, col = 1, ylim = c(0,100), ylab = "Diversity", xlab = "Generation", main = "Average Time Series of repeated Neutral Model Simulations")
   lines(richness_min_mean, pch = 1, cex = 0.75, col = 2)
   suppressWarnings(for(i in 1:201){
     # Plotting confidence intervals
@@ -446,23 +446,23 @@ Challenge_A <- function() {
       print(i)
     }
   })
-  abline(v = 37)
-  text("Reaching dynamic equilibrium\nat the 37th generation", x = 80, y = 80)
+  abline(v = 27)
+  text("Reaching dynamic equilibrium\nat the 27th generation", x = 60, y = 80)
   legend('topright', c('richness_max','richness_min'), fill = c(1,2), bty = "n")
-  
 }
 
 # Challenge question B
 Challenge_B <- function() {
   graphics.off()# clear any existing graphs and plot your graph within the R window
-  plot(1, type="n", xlim=c(0, 201), ylim=c(0, 100), frame.plot = F, ylab = "Diversity", xlab = "Generation", main = "Time Series Graph of a Neutral Model Simulation") # initiating an empty plot
-  richness_df = as.data.frame(matrix(NaN, nr = 50, nc = 201))
+  plot(1, type="n", xlim=c(0, 201), ylim=c(0, 100), frame.plot = F, ylab = "Diversity", xlab = "Generation", main = "Neutral Model Simulations over a Range of Diversities") # initiating an empty plot
+  richness_df = as.data.frame(matrix(NaN, nr = 50, nc = 201)) # Creating a dataframe for saving all richness values
   for(i in 1:11){
     for(j in 1:50){
       community = c()
       set.seed(j)
-      community_init = seq((i-1)*10)
-      if(length(community_init)<100){
+      community_init = seq((i-1)*10) # set a initial community, one value for each species
+      # Making a community with size of 100, for a range of richness
+      if(length(community_init)<100){ # adding replicated values for the rest
         community = c(community_init, sample(community_init, 100- length(community_init), replace = T))
       }else{
         community = community_init
@@ -477,55 +477,157 @@ Challenge_B <- function() {
 }
 
 # Challenge question C
-
-mean_rich_cal <- function(i_start = 1, i_end = 25){
-  if(i_end == 25) size = 500
-  if(i_end == 50) size = 1000
-  if(i_end == 75) size = 2500
-  if(i_end == 100) size = 5000
-  richness_df_min = 0; richness_df_max = 0
-  for(i in i_start:i_end){
-    load(paste("Neutral_cluster_", i, ".rda", sep = ""))
-    richness_df_min = sum_vect(richness_df_min, richness_min)
-    richness_df_max = sum_vect(richness_df_max, richness_max)
-  }
-  richness_mean_min = richness_df_min/25
-  richness_mean_max = richness_df_max/25
-  plot(1, type="n", xlim = c(0,length(richness_df_max)), ylim=c(0, size), frame.plot = F, ylab = "Diversity", xlab = "Generation", sub = paste("(Simulation size = ",size, ")"))
-  lines(richness_mean_min, pch = 1, cex = 0.75, col = 1)
-  lines(richness_mean_max, pch = 1, cex = 0.75, col = 2)
-  legend('topright', c('richness_min','richness_max'), fill = c(1,2), bty = "n", y.intersp=0.7)
-}
-
 Challenge_C <- function() {
+  
+  mean_rich_cal <- function(i_start = 1, i_end = 25){
+    if(i_end == 25) size = 500
+    if(i_end == 50) size = 1000
+    if(i_end == 75) size = 2500
+    if(i_end == 100) size = 5000
+    richness_df_min = 0; richness_df_max = 0
+    for(i in i_start:i_end){
+      load(paste("Neutral_cluster_", i, ".rda", sep = ""))
+      richness_df_min = sum_vect(richness_df_min, richness_min) # Calculating the sum of all richness values in one size
+      richness_df_max = sum_vect(richness_df_max, richness_max)
+    }
+    richness_mean_min = richness_df_min/25 # Calculating the mean richness
+    richness_mean_max = richness_df_max/25
+    plot(1, type="n", xlim = c(0,length(richness_df_max)), ylim=c(0, size), frame.plot = F, ylab = "Diversity", xlab = "Generation", sub = paste("(Simulation size = ",size, ")"))
+    lines(richness_mean_min, pch = 1, cex = 0.75, col = 1)
+    lines(richness_mean_max, pch = 1, cex = 0.75, col = 2)
+    legend('topright', c('richness_min','richness_max'), fill = c(1,2), bty = "n", y.intersp=0.7)
+  }
+  
   graphics.off()# clear any existing graphs and plot your graph within the R window
   par(mfrow = c(2,2))
   mean_rich_cal(1,25)
   mean_rich_cal(26,50)
   mean_rich_cal(51,75)
   mean_rich_cal(76,100)
-  title("Time Series Graph of a Neutral Model Simulation", outer = T, line = -1.5)
+  title("Neutral Model Simulations of 4 Community Sizes", outer = T, line = -1.5)
 }
 
 # Challenge question D
 Challenge_D <- function() {
-  # clear any existing graphs and plot your graph within the R window
+  graphics.off()# clear any existing graphs and plot your graph within the R window
   
   return("type your written answer here")
 }
 
 # Challenge question E
 Challenge_E <- function() {
-  # clear any existing graphs and plot your graph within the R window
+  graphics.off()# clear any existing graphs and plot your graph within the R window
+  # Original chaos game
+  chaos_game(x = c(0,3,4), y = c(0,4,1), X = c(0,0), max_time = 5)
+  # Starting with different initial position X
+  x = c(0,3,4); y = c(0,4,1); X = c(2,1.5)
+  xy = data.frame(x,y) # Saving the locations of the three points into a dataframe
+  plot(xy, xlab = "", ylab = "")
+  text(0,0.3,"A") # Labeling the three points
+  text(3.2,4,"B")
+  text(4,0.7, "C")
+  points(X[1],X[2], pch = 19, cex = 0.1) # The start of point vector X
+  for(i in 1:10000){
+    set.seed(i)
+    a = sample(3,1) # picking a point
+    X = c((X[1]+xy[a,1])/2, (X[2]+xy[a,2])/2) # Moving X
+    points(X[1],X[2], pch = 19, cex = 0.1)
+  }
+
+  x = c(0,3,4); y = c(0,4,1); X = c(2,1.5)
+  xy = data.frame(x,y) # Saving the locations of the three points into a dataframe
+  for(n in 1:8){
+    set.seed(n)
+    a = sample(3,1) # picking a point
+    X1 = c((X[1]+xy[a,1])/2, (X[2]+xy[a,2])/2) # Moving X
+    arrows(X[1],X[2], X1[1],X1[2], col = 2, code = 2, length = 0.05) # Drawing the paths
+    points(X[1],X[2], pch = 19, cex = 0.5, col = 2)
+    X = X1
+  }
   
-  return("type your written answer here")
+  # Starting a little gallery of chaos game
+  par(mfrow = c(2,2))
+  # Classic Sierpinski Gasket
+  x = c(0,2,4); y = c(0,sqrt(12),0); X = c(0,0); max_time = 2
+  start_time = proc.time()[3]
+  xy = data.frame(x,y) # Saving the locations of the three points into a dataframe
+  plot(xy, xlab = "", ylab = "", sub = "Classic Sierpinski Gasket", frame.plot = F)
+  text(0,0.3,"A") # Labeling the three points
+  text(xy[2,1]+0.3,xy[2,2],"B")
+  text(4,0.7, "C")
+  points(X[1],X[2], pch = 19, cex = 0.001) # The start of point vector X
+  repeat{
+    a = sample(3,1) # picking a point
+    X = c((X[1]+xy[a,1])/2, (X[2]+xy[a,2])/2) # Moving X
+    points(X[1],X[2], pch = 19, cex = 0.001)
+    if(proc.time()[3]-start_time >= max_time){break}} # Repeating chaos game within given time limit
+  
+  # Moving 2/3 to the next point
+  x = c(0,2,4); y = c(0,sqrt(12),0); X = c(0,0); max_time = 2
+  start_time = proc.time()[3]
+  xy = data.frame(x,y) # Saving the locations of the three points into a dataframe
+  plot(xy, xlab = "", ylab = "", sub = "Distance as 2/3 of length", frame.plot = F)
+  text(0,0.3,"A") # Labeling the three points
+  text(xy[2,1]+0.3,xy[2,2],"B")
+  text(4,0.7, "C")
+  points(X[1],X[2], pch = 19, cex = 0.001) # The start of point vector X
+  repeat{
+    a = sample(3,1) # picking a point
+    X = c((X[1]+2*xy[a,1])/3, (X[2]+2*xy[a,2])/3) # Moving X
+    points(X[1],X[2], pch = 19, cex = 0.001)
+    if(proc.time()[3]-start_time >= max_time){break}} # Repeating chaos game within given time limit
+    
+  # Making a square
+  x = c(0,0,4,4); y = c(0,4,0,4); X = c(0,0); max_time = 2
+  xy = data.frame(x,y) # Saving the locations of the three points into a dataframe
+  plot(xy, xlab = "", ylab = "", xlim = c(-0.5,4.5), ylim=c(-0.5,4.5), sub = "Square", frame.plot = F)
+  points(X[1],X[2], pch = 19, cex = 0.001) # The start of point vector X
+  start_time = proc.time()[3]
+  repeat{
+    a = sample(4,1) # picking a point
+    X = c((X[1]+xy[a,1])/2, (X[2]+xy[a,2])/2) # Moving X
+    points(X[1],X[2], pch = 19, cex = 0.001)
+    if(proc.time()[3]-start_time >= max_time){break}} # Repeating chaos game within given time limit
+
+  # Pentagon
+  x = c(0,5,6.54,2.5,-1.54); y = c(0,0,4.75,7.69,4.75); X = c(0,0); max_time = 2
+  xy = data.frame(x,y) # Saving the locations of the three points into a dataframe
+  plot(xy, xlab = "", ylab = "", sub = "Pentagon", frame.plot = F)
+  points(X[1],X[2], pch = 19, cex = 0.001) # The start of point vector X
+  start_time = proc.time()[3]
+  repeat{
+    a = sample(5,1) # picking a point
+    X = c((X[1]+xy[a,1])/2, (X[2]+xy[a,2])/2) # Moving X
+    points(X[1],X[2], pch = 19, cex = 0.001)
+    if(proc.time()[3]-start_time >= max_time){break}} # Repeating chaos game within given time limit
+  title("Little Gallery of Chaos Game", outer = T, line = -1.5)
+  
+  return("The plot remains the same after changing initial position of X. Given enough time of iterations, X will fall back on track regardless of the initial position; the initial position (deviation from the track) will only determine how many iterations it takes for X to fall back on track. Possibly because in the beginning, the distance between the new starting point and the matching point on track was reducing as every move was divided by 2, so these points will finally converge to the points on track, therefore producing the same pattern plot. ")
 }
 
 # Challenge question F
 Challenge_F <- function() {
-  # clear any existing graphs and plot your graph within the R window
+  graphics.off()# clear any existing graphs and plot your graph within the R window
   
-  return("type your written answer here")
+  fernF<- function(start_position = c(0,0), direction = pi/2, length = 1, dir =1, e = 0.1)  {
+    endpoint = turtle(start_position, direction, length)
+    if(length >= e){
+      fernF(start_position = endpoint, direction = direction, length = 0.87 * length, dir = -dir, e)
+      fernF(start_position = endpoint, direction = direction + dir * pi/4, length = 0.38 * length, dir = dir, e)}
+  }
+  
+  draw_fernF <- function(start_position = c(0,0), direction = pi/2, length = 1, dir = 1, e = 0.1)  {
+    plot(1, type="n", xlab="", ylab="", xlim=c(-2, 2), ylim=c(0, 8), sub = paste("e = ", e )) # initiating an empty plot
+    fernF(start_position, direction, length, dir, e)
+  }
+  
+  par(mfrow = c(1,3))
+  draw_fernF(start_position = c(0,0), direction = pi/2, length = 1, dir = 1, e = 0.05) # size threshold as 0.05
+  draw_fernF(start_position = c(0,0), direction = pi/2, length = 1, dir = 1, e = 0.01) # size threshold as 0.01
+  draw_fernF(start_position = c(0,0), direction = pi/2, length = 1, dir = 1, e = 0.005) # size threshold as 0.005
+  title("Changing the line size threshold",outer = T, line = -1.5)
+
+  return("When line size threshold is reduced, the plot produced becomes more detailed and the plotting time is increased.")
 }
 
 # Challenge question G should be written in a separate file that has no dependencies on any functions here.
