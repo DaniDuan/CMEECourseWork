@@ -289,7 +289,7 @@ plot_cluster_results <- function()  {
     barplot(data, beside = T, ylab = "Number of Species", xlab = "Species Abundance", col = c(0,1), ylim = c(0,30), sub = "(Simulation size = 5000)", cex.names = 0.75, cex.axis = 0.75) 
     legend("topright", c("octave_max", "octave_min"), fill = c(0,1), bty = "n", y.intersp=0.7, cex = 0.8)
     
-    title("Species Abundance Octave of Neutral Model Simulation", outer = T, line = -1.5) 
+    title("Species Abundance Octave of Neutral Model Simulation (speciation rate: 0.005413)", outer = T, line = -1.5) 
     return(combined_results)
 }
 
@@ -627,6 +627,29 @@ Challenge_F <- function() {
   draw_fernF(start_position = c(0,0), direction = pi/2, length = 1, dir = 1, e = 0.005) # size threshold as 0.005
   title("Changing the line size threshold",outer = T, line = -1.5)
 
+  # A simple tree and its shadow
+  turtle_F <- function(start_position = c(0,0), direction = pi/2, length = 1, Fcol = 1)  {
+    x = start_position[1]+length*cos(direction) # moving the point according to the given direction
+    y = start_position[2]+length*sin(direction)
+    endpoint = c(x,y)
+    lines(c(start_position[1],x),c(start_position[2],y), col = Fcol)
+    return(endpoint) # you should return your endpoint here.
+  }
+  
+  fernF_c<- function(start_position = c(0,0), direction = pi/2, length = 1, dir =1, e = 0.1, Fcol = 1)  {
+    endpoint = turtle_F(start_position, direction, length, Fcol)
+    if(length >= e){
+      fernF_c(start_position = endpoint, direction = direction, length = 0.87 * length, dir = -dir, e, Fcol)
+      fernF_c(start_position = endpoint, direction = direction + dir * pi/4, length = 0.38 * length, dir = dir, e, Fcol)}
+  }
+  
+  draw_fernF_c <- function(start_position = c(0,0), direction = pi/2, length = 1, dir = 1, e = 0.1, Fcol = 1)  {
+    plot(1, type="n", xlab="", ylab="", xlim=c(-2, 5), ylim=c(0, 8), main = "A simple tree and its shadow", axes = F, frame.plot = F) # initiating an empty plot
+    fernF_c(start_position, direction, length, dir, e, Fcol)
+  }
+  
+  draw_fernF_c(start_position = c(0,0), direction = pi/4, length = 0.8, dir = 0.5, e = 0.005, Fcol = 1)
+  fernF_c(start_position = c(0,0), direction = pi/2, length = 1, dir = 0.5, e = 0.005, Fcol = 3)
   return("When line size threshold is reduced, the plot produced becomes more detailed and the plotting time is increased.")
 }
 
