@@ -6,7 +6,7 @@ This Week3 directory contains R scripts and programs for coursework in **Biologi
 
 ## Languages
 
-R
+R, Python
 
 ## Dependencies
 
@@ -14,6 +14,10 @@ For some scripts in this directory, packages [tidyverse](https://cran.r-project.
 Please run the following script in **R/RStudio** for package installation: 
 ```R
 install.packages(c("tidyverse", "ggplot2", "reshape2", "maps", "sqldf"))
+```
+For one Python script panda is required. Please run following **bash** script in Linux Terminal for installation::
+```bash
+pip3 install pandas
 ```
 
 [LaTeX](https://www.latex-project.org/) installation is also required. Please run following **bash** script in Linux Terminal for installation:

@@ -1,25 +1,49 @@
-"""Runs both LV1.py and LV2.py with appropriate arguments."""
+#!usr/bin/env python3
 
-from LV1 import main as lv1run
-from LV2 import main as lv2run
+"""Imports LV1.py, LV2.py, LV3.py, LV4.py and LV5.py and profiles them"""
+
+__appname__ = "Run_LV.py"
+__author__ = 'Elin Falla (ef16@ic.ac.uk), Ioan Evans (ie917@ic.ac.uk), Danica Duan (dd1820@ic.ac.uk)'
+__version__ = '0.0.2'
+
+# Imports #
+# Packages
 import cProfile
 import pstats
+import sys
 
-lv1run([])
-lv2run([1,5000,0.5,1.5,0.75])
+# Scripts
+import LV1
+import LV2
+import LV3
+import LV4
+import LV5
 
-pr = cProfile.Profile() #creating a new profile
 
-pr.enable() #enabling the profile
-lv1run([]) #run the program for profiling 
-pr.disable() #disabling the profile
-ps = pstats.Stats(pr)
-ps.sort_stats('cumtime').print_stats(15)   # Sort by cumulative time spent in the function
+scripts = (LV1, LV2, LV3, LV4, LV5)
 
-pr.enable()
-lv2run([])
-pr.disable()
-ps = pstats.Stats(pr)
-ps.sort_stats('cumtime').print_stats(15)   # Sort by cumulative time spent in the function
+for script in scripts:
+    # opens profile
+    pr = cProfile.Profile()
+
+    # enables profile
+    pr.enable()
+
+    # runs script within profile
+    script.main([])  # main takes argv which is a list so put in empty list
+
+    # disables profile
+    pr.disable()
+
+    # create stats based on the profile
+    ps = pstats.Stats(pr)
+
+    # sort stats by cumulative time then print first 20 lines to get only largest cumtimes
+    ps.sort_stats('cumtime').print_stats(20)
+
+
+
+
+
 
 

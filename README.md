@@ -22,10 +22,10 @@ sudo apt install imagemagick
 sudo apt install texlive-full texlive-fonts-recommended texlive-pictures texlive-latex-extra imagemagick
 ```
 
-For some scripts in Week3 directory, R packages [tidyverse](https://cran.r-project.org/web/packages/tidyverse/index.html), [ggplot2](https://cran.r-project.org/web/packages/ggplot2/index.html), [reshape2](https://cran.r-project.org/web/packages/reshape2/index.html), [maps](https://cran.r-project.org/web/packages/maps/index.html), and [sqldf](https://cran.r-project.org/web/packages/sqldf/index.html) are required. 
+For some scripts in Week3 directory, R packages [tidyverse](https://cran.r-project.org/web/packages/tidyverse/index.html), [ggplot2](https://cran.r-project.org/web/packages/ggplot2/index.html), [reshape2](https://cran.r-project.org/web/packages/reshape2/index.html), [maps](https://cran.r-project.org/web/packages/maps/index.html), [sqldf](https://cran.r-project.org/web/packages/sqldf/index.html) and [minpack.lm](https://cran.r-project.org/web/packages/minpack.lm/index.html) are required. 
 Please run the following script in **R/RStudio** for package installation: 
 ```R
-install.packages(c("tidyverse", "ggplot2", "reshape2", "maps", "sqldf"))
+install.packages(c("tidyverse", "ggplot2", "reshape2", "maps", "sqldf", "minpack.lm"))
 ```
 
 ## Installation
@@ -174,7 +174,15 @@ Data Management and Visualization:
 
 - **PP_Regress.R:** Plotting analysis subsetted by the Predator.lifestage, and calculate the regression results corresponding to the lines fitted. 
 
+### The Miniproject
 
+- **Thermal.R:** the main script for running all model simulations and data analysis on four thermal performance models (cubic, quadratic, Briere and Schoolfield models).
+
+- **Miniproject_report.tex**: the Latex file for the report. 
+
+- **CompileLaTeX&#46;sh**: the shell script for generating the Latex report. 
+
+- **run&#46;py**: the python script for running the entire project. 
 
 ## Author name and contact
 
